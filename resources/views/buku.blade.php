@@ -151,7 +151,11 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
-
+            Swal.fire(
+            'Success',
+            'You clicked the button!',
+            'success'
+            )
             $('#bukuForm').trigger("reset");
             $('#ajaxModel').modal('hide');
             table.draw();
@@ -167,28 +171,38 @@ $(function () {
     $('body').on('click', '.deleteBuku', function () {
 
         var buku_id = $(this).data("id");
-        var del = confirm("Are You sure want to delete !");
-
-        if (del == true) {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+        }).then((result) => {
+        if (result.value) {
             $.ajax({
-            type: "DELETE",
-            url: "{{ route('buku.store') }}"+'/'+buku_id,
-            success: function (data) {
-                table.draw();
-            },
-            error: function (data) {
-                console.log('Error:', data);
-            }
-        });
-        } else {
-
+                type: "DELETE",
+                url: "{{ route('buku.store') }}"+'/'+buku_id,
+                success: function (data) {
+                    table.draw();
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+            )
         }
-        return del;
+        })
     });
 
     $('#cancelBtn').click(function(e) {
         e.preventDefault();
-            $('#rakForm').trigger("reset");
+            $('#bukuForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
     })

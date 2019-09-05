@@ -11,7 +11,7 @@
                     <div class="container">
                         <br>
                         <h1>Perpustakaan - Anggota</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewAnggota"> Create New Anggota</a>
+                        <a class="btn btn-success" href="javascript:void(0)" id="createNewAnggota"> Buat Anggota</a>
                         <br>
                         <br/>
 
@@ -24,7 +24,7 @@
                                     <th>Jenis Kelamin</th>
                                     <th>Jurusan</th>
                                     <th width="280px">Alamat</th>
-                                    <th>Action</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,10 +79,10 @@
                                         </div>
 
                                         <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                             </button>
 
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Cancel
+                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
                                             </button>
                                         </div>
                                     </form>
@@ -146,7 +146,7 @@ $(function () {
 
     $('#saveBtn').click(function (e) {
         e.preventDefault();
-        $(this).html('Save Changes');
+        $(this).html('Simpan');
 
         $.ajax({
         data: $('#anggotaForm').serialize(),
@@ -154,7 +154,11 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
-
+            Swal.fire(
+            'Berhasil',
+            'Klik Button',
+            'success'
+            )
             $('#anggotaForm').trigger("reset");
             $('#ajaxModel').modal('hide');
             table.draw();
@@ -169,29 +173,38 @@ $(function () {
 
     $('body').on('click', '.deleteAnggota', function () {
         var anggota_id = $(this).data("id");
-        var del = confirm("Are You sure want to delete !");
-
-        if (del == true) {
+        Swal.fire({
+        title: 'Apakah Kamu Yakin?',
+        text: "Kamu Tidak Dapat Mengembalikannya!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+        }).then((result) => {
+        if (result.value) {
             $.ajax({
-            type: "DELETE",
-            url: "{{ route('anggota.store') }}"+'/'+anggota_id,
-            success: function (data) {
-                table.draw();
-            },
-            error: function (data) {
-                console.log('Error:', data);
-            }
-        });
-        } else {
-
+                type: "DELETE",
+                url: "{{ route('anggota.store') }}"+'/'+anggota_id,
+                success: function (data) {
+                    table.draw();
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+            Swal.fire(
+            'Hapus!',
+            'Berhasil Dihapus.',
+            'success'
+            )
         }
-        return del;
-
+        })
     });
 
     $('#cancelBtn').click(function(e) {
         e.preventDefault();
-            $('#rakForm').trigger("reset");
+            $('#anggotaForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
     })

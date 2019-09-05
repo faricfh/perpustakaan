@@ -20,6 +20,9 @@ Route::resource('petugas', 'PetugasController');
 Route::resource('buku', 'BukuController');
 
 Route::resource('anggota', 'AnggotaController');
+// Route::get('/anggota', function () {
+//     return view('anggota');
+// });
 
 Route::resource('rak', 'RakController');
 

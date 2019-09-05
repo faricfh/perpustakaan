@@ -21,7 +21,7 @@ class AnggotaController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editAnggota">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteAnggota">Delete</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteAnggota">Hapus</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -35,10 +35,6 @@ class AnggotaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
