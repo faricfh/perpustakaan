@@ -109,7 +109,7 @@ $(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('anggota.index') }}",
+        ajax: "{{ url('anggota') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_anggota', name: 'kode_anggota'},
@@ -125,13 +125,13 @@ $(function () {
         $('#saveBtn').val("create-anggota");
         $('#anggota_id').val('');
         $('#anggotaForm').trigger("reset");
-        $('#modelHeading').html("Create New Anggota");
+        $('#modelHeading').html("Buat Anggota");
         $('#ajaxModel').modal('show');
     });
 
     $('body').on('click', '.editAnggota', function () {
     var anggota_id = $(this).data('id');
-    $.get("{{ route('anggota.index') }}" +'/' + anggota_id +'/edit', function (data) {
+    $.get("{{ url('anggota') }}" +'/' + anggota_id +'/edit', function (data) {
         $('#modelHeading').html("Edit Anggota");
         $('#saveBtn').val("edit-user");
         $('#ajaxModel').modal('show');
@@ -150,13 +150,13 @@ $(function () {
 
         $.ajax({
         data: $('#anggotaForm').serialize(),
-        url: "{{ route('anggota.store') }}",
+        url: "{{ url('anggota-store') }}",
         type: "POST",
         dataType: 'json',
         success: function (data) {
             Swal.fire(
             'Berhasil',
-            'Klik Button',
+            'Klik OK',
             'success'
             )
             $('#anggotaForm').trigger("reset");
@@ -166,7 +166,7 @@ $(function () {
         },
         error: function (data) {
             console.log('Error:', data);
-            $('#saveBtn').html('Save Changes');
+            $('#saveBtn').html('Simpan');
         }
     });
     });
@@ -175,7 +175,7 @@ $(function () {
         var anggota_id = $(this).data("id");
         Swal.fire({
         title: 'Apakah Kamu Yakin?',
-        text: "Kamu Tidak Dapat Mengembalikannya!",
+        text: "Kamu Tidak Dapat Mengembalikannya Lagi!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -185,7 +185,7 @@ $(function () {
         if (result.value) {
             $.ajax({
                 type: "DELETE",
-                url: "{{ route('anggota.store') }}"+'/'+anggota_id,
+                url: "{{ url('anggota-store') }}"+'/'+anggota_id,
                 success: function (data) {
                     table.draw();
                 },

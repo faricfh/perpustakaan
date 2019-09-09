@@ -8,7 +8,7 @@ use App\Anggota;
 
 class AnggotaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $anggota = Anggota::all();
 

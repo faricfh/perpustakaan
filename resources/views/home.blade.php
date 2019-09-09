@@ -4,8 +4,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <br><br><br><br><br><br><br><br><br>
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                {{-- <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -15,7 +16,8 @@
                     @endif
 
                     You are logged in!
-                </div>
+                </div> --}}
+                <h1 align="center">PERPUSTAKAAN</h1>
             </div>
         </div>
     </div>

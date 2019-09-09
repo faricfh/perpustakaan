@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="container">
                         <h1>Perpustakaan - Petugas</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewPetugas"> Create New Petugas</a>
+                        <a class="btn btn-success" href="javascript:void(0)" id="createNewPetugas"> Buat Petugas</a>
                         <br>
                         <br>
                         <table class="table table-bordered data-table">
@@ -23,7 +23,7 @@
                                     <th>Jabatan</th>
                                     <th>Telp</th>
                                     <th width="100px">Alamat</th>
-                                    <th>Action</th>
+                                    <th width="100px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,10 +86,10 @@
                                         </div>
 
                                         <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save Changes
+                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                             </button>
 
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Cancel
+                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
                                             </button>
                                         </div>
                                     </form>
@@ -116,7 +116,7 @@ $(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('petugas.index') }}",
+        ajax: "{{ url('petugas') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_petugas', name: 'kode_petugas'},
@@ -140,7 +140,7 @@ $(function () {
 
     $('body').on('click', '.editPetugas', function () {
     var petugas_id = $(this).data('id');
-    $.get("{{ route('petugas.index') }}" +'/' + petugas_id +'/edit', function (data) {
+    $.get("{{ url('petugas') }}" +'/' + petugas_id +'/edit', function (data) {
         $('#modelHeading').html("Edit Petugas");
         $('#saveBtn').val("edit-user");
         $('#ajaxModel').modal('show');
@@ -156,17 +156,17 @@ $(function () {
 
     $('#saveBtn').click(function (e) {
         e.preventDefault();
-        $(this).html('Save Changes');
+        $(this).html('Simpan');
 
         $.ajax({
         data: $('#petugasForm').serialize(),
-        url: "{{ route('petugas.store') }}",
+        url: "{{ url('petugas-store') }}",
         type: "POST",
         dataType: 'json',
         success: function (data) {
             Swal.fire(
-            'Success',
-            'You clicked the button!',
+            'Berhasil',
+            'Klik OK',
             'success'
             )
             $('#petugasForm').trigger("reset");
@@ -175,7 +175,7 @@ $(function () {
         },
         error: function (data) {
             console.log('Error:', data);
-            $('#saveBtn').html('Save Changes');
+            $('#saveBtn').html('Simpan');
         }
     });
     });
@@ -183,8 +183,8 @@ $(function () {
     $('body').on('click', '.deletePetugas', function () {
         var petugas_id = $(this).data("id");
         Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Apakah Kamu Yakin?',
+        text: "Kamu Tidak Dapat Mengembalikannya Lagi!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -194,7 +194,7 @@ $(function () {
         if (result.value) {
             $.ajax({
                 type: "DELETE",
-                url: "{{ route('petugas.store') }}"+'/'+petugas_id,
+                url: "{{ url('petugas-store') }}"+'/'+petugas_id,
                 success: function (data) {
                     table.draw();
                 },
@@ -203,8 +203,8 @@ $(function () {
                 }
             });
             Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
+            'Hapus!',
+            'Berhasil Dihapus.',
             'success'
             )
         }

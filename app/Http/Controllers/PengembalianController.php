@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Pengembalian;
 use Illuminate\Http\Request;
+use DataTables;
 
 class PengembalianController extends Controller
 {
@@ -11,9 +13,21 @@ class PengembalianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Pengembalian::with('buku', 'petugas', 'anggota')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editPengembalian">Edit</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deletePengembalian">Hapus</a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('pengembalian');
     }
 
     /**
@@ -34,7 +48,32 @@ class PengembalianController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tanggal_kembali = strtotime($request->tanggal_kembali);
+        $jatuh_tempo = strtotime($request->jatuh_tempo);
+        $jumlah = $tanggal_kembali - $jatuh_tempo;
+        $jumlah_hari = floor($jumlah / (60 * 60 * 24));
+        if ($jumlah_hari <= 0) {
+            $jumlah_hari = 0;
+            $total_denda = 0;
+        } else {
+            $total_denda = $jumlah_hari * 2000;
+        }
+
+        Pengembalian::updateOrCreate(
+            ['id' => $request->pengembalian_id],
+            [
+                'kode_kembali' => $request->kode_kembali,
+                'tanggal_kembali' => $request->tanggal_kembali,
+                'jatuh_tempo' => $request->jatuh_tempo,
+                'denda_per_hari' => 2000,
+                'jumlah_hari' => $jumlah_hari,
+                'total_denda' => $total_denda,
+                'kode_petugas' => $request->kode_petugas,
+                'kode_anggota' => $request->kode_anggota,
+                'kode_buku' => $request->kode_buku,
+            ]
+        );
+        return response()->json(['success' => 'Product saved successfully.']);
     }
 
     /**
@@ -56,7 +95,8 @@ class PengembalianController extends Controller
      */
     public function edit($id)
     {
-        //
+        $pengembalian = Pengembalian::find($id);
+        return response()->json($pengembalian);
     }
 
     /**
@@ -79,6 +119,7 @@ class PengembalianController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Pengembalian::find($id)->delete();
+        return response()->json(['success' => 'Product deleted successfully.']);
     }
 }

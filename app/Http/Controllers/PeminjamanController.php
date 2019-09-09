@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Peminjaman;
+use DataTables;
 
 class PeminjamanController extends Controller
 {
@@ -11,9 +13,21 @@ class PeminjamanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Peminjaman::with('buku', 'anggota', 'petugas')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editPeminjaman">Edit</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deletePeminjaman">Hapus</a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('peminjaman');
     }
 
     /**
@@ -34,7 +48,18 @@ class PeminjamanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Peminjaman::updateOrCreate(
+            ['id' => $request->peminjaman_id],
+            [
+                'kode_pinjam' => $request->kode_pinjam,
+                'tanggal_pinjam' => $request->tanggal_pinjam,
+                'tanggal_kembali' => $request->tanggal_kembali,
+                'kode_petugas' => $request->kode_petugas,
+                'kode_anggota' => $request->kode_anggota,
+                'kode_buku' => $request->kode_buku
+            ]
+        );
+        return response()->json(['success' => 'Peminajaman saved successfully.']);
     }
 
     /**
@@ -56,7 +81,8 @@ class PeminjamanController extends Controller
      */
     public function edit($id)
     {
-        //
+        $peminjaman = Peminjaman::find($id);
+        return response()->json($peminjaman);
     }
 
     /**
@@ -79,6 +105,7 @@ class PeminjamanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Peminjaman::find($id)->delete();
+        return response()->json(['success' => 'Peminjaman deleted successfully.']);
     }
 }

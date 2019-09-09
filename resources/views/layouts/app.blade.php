@@ -22,6 +22,8 @@
     {{-- swetaler --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
+    {{-- select2 --}}
+
     {{--  add ajax --}}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
@@ -61,10 +63,18 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('rak') }}">Rak</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('peminjaman') }}">Peminjaman</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('pengembalian') }}">Pengembalian</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    {{-- <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
@@ -93,7 +103,7 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                        @endguest --}}
                     </ul>
                 </div>
             </div>
@@ -103,7 +113,6 @@
             @yield('content')
         </main>
     </div>
-
     @yield('js')
 </body>
 </html>

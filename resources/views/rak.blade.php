@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('css')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -11,7 +13,7 @@
                     <div class="container">
                         <br>
                         <h1>Perpustakaan - Rak</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewRak"> Create New Rak</a>
+                        <a class="btn btn-success" href="javascript:void(0)" id="createNewRak"> Buat Rak</a>
                         <br>
                         <br/>
 
@@ -21,8 +23,8 @@
                                     <th>No</th>
                                     <th width="230px">Kode Rak</th>
                                     <th width="230px">Nama Rak</th>
-                                    <th width="230px">Kode Buku</th>
-                                    <th>Action</th>
+                                    <th width="230px">Buku</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,17 +59,20 @@
 
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <label>Kode Buku</label>
+                                                <label>Buku</label>
+                                                {{-- <div class="col-sm-12"> --}}
+                                                    {{-- <select name="kode_buku" class="form-control kode_buku" id="e1" style="width:100%" multiple></select> --}}
+                                                {{-- </div> --}}
                                                 <select name="kode_buku" class="form-control" id="kode_buku">
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                             </button>
 
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Cancel
+                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
                                             </button>
                                         </div>
                                     </form>
@@ -82,6 +87,12 @@
 </div>
 @endsection
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#e1").select2();
+    });
+</script>
 <script type="text/javascript">
 $(function () {
 
@@ -94,12 +105,12 @@ $(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('rak.index') }}",
+        ajax: "{{ url('/rak') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_rak', name: 'kode_rak'},
             {data: 'nama_rak', name: 'nama_rak'},
-            {data: 'buku.kode_buku', name: 'kode_buku'},
+            {data: 'buku.judul', name: 'kode_buku'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -108,12 +119,12 @@ $(function () {
         $('#saveBtn').val("create-rak");
         $('#rak_id').val('');
         $('#rakForm').trigger("reset");
-        $('#modelHeading').html("Create New Rak");
+        $('#modelHeading').html("Buat Rak");
         $('#ajaxModel').modal('show');
     });
 
      $.ajax({
-        url: "{{ route('buku.index') }}",
+        url: "{{ url('buku') }}",
         method: "GET",
         dataType: "json",
         success: function (berhasil) {
@@ -121,7 +132,7 @@ $(function () {
             $.each(berhasil.data, function (key, value) {
                 $("#kode_buku").append(
                     `
-                        <option value="${value.id}">${value.kode_buku}</option>
+                        <option value="${value.id}">${value.judul}</option>
                     `
                 )
             })
@@ -129,50 +140,49 @@ $(function () {
     });
 
     $('body').on('click', '.editRak', function () {
-    var rak_id = $(this).data('id');
-    $.get("{{ route('rak.index') }}" +'/' + rak_id +'/edit', function (data) {
-        $('#modelHeading').html("Edit Anggota");
-        $('#saveBtn').val("edit-user");
-        $('#ajaxModel').modal('show');
-        $('#rak_id').val(data.id);
-        $('#kode_rak').val(data.kode_rak);
-        $('#nama_rak').val(data.nama_rak);
-        $('#kode_buku').val(data.kode_buku);
-    })
-});
+        var rak_id = $(this).data('id');
+        $.get("{{ url('/rak') }}" +'/' + rak_id +'/edit', function (data) {
+            $('#modelHeading').html("Edit Anggota");
+            $('#saveBtn').val("edit-user");
+            $('#ajaxModel').modal('show');
+            $('#rak_id').val(data.id);
+            $('#kode_rak').val(data.kode_rak);
+            $('#nama_rak').val(data.nama_rak);
+            $('#kode_buku').val(data.kode_buku);
+        })
+    });
 
     $('#saveBtn').click(function (e) {
         e.preventDefault();
-        $(this).html('Save Changes');
+        $(this).html('Simpan');
+            $.ajax({
+            data: $('#rakForm').serialize(),
+            url: "{{ url('rak-store') }}",
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                Swal.fire(
+                'Berhasil',
+                'Klik OK',
+                'success'
+                )
+                $('#rakForm').trigger("reset");
+                $('#ajaxModel').modal('hide');
+                table.draw();
 
-        $.ajax({
-        data: $('#rakForm').serialize(),
-        url: "{{ route('rak.store') }}",
-        type: "POST",
-        dataType: 'json',
-        success: function (data) {
-            Swal.fire(
-            'Success',
-            'You clicked the button!',
-            'success'
-            )
-            $('#rakForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-            table.draw();
-
-        },
-        error: function (data) {
-            console.log('Error:', data);
-            $('#saveBtn').html('Save Changes');
-        }
-    });
+            },
+            error: function (data) {
+                console.log('Error:', data);
+                $('#saveBtn').html('Simpan');
+            }
+        });
     });
 
     $('body').on('click', '.deleteRak', function () {
         var rak_id = $(this).data("id");
         Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Apakah Kamu Yakin?',
+        text: "Kamu Tidak Dapat Mengembalikannya Lagi!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -182,7 +192,7 @@ $(function () {
         if (result.value) {
             $.ajax({
                 type: "DELETE",
-                url: "{{ route('rak.store') }}"+'/'+rak_id,
+                url: "{{ url('rak-store') }}"+'/'+rak_id,
                 success: function (data) {
                     table.draw();
                 },
@@ -191,8 +201,8 @@ $(function () {
                 }
             });
             Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
+            'Hapus!',
+            'Berhasil Dihapus.',
             'success'
             )
         }

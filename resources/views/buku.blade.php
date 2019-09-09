@@ -10,7 +10,7 @@
                     <div class="container">
                         <br>
                         <h1 align="center">Perpustakaan - Buku</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewBuku"> Create New Buku</a>
+                        <a class="btn btn-success" href="javascript:void(0)" id="createNewBuku">Buat Buku</a>
                         <br>
                         <br/>
                         <table class="table table-bordered data-table">
@@ -22,7 +22,7 @@
                                     <th>Penulis</th>
                                     <th>Penerbit</th>
                                     <th>Tahun Terbit</th>
-                                    <th>Action</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,43 +44,43 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Kode Buku</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_buku" name="kode_buku" placeholder="Enter Kode Buku" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="kode_buku" name="kode_buku" placeholder="Kode Buku" value="" maxlength="50" required="">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Judul</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="judul" name="judul" placeholder="Enter Judul" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" value="" maxlength="50" required="">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Penulis</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Enter Penulis" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" value="" maxlength="50" required="">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Penerbit</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Enter Penerbit" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Penerbit" value="" maxlength="50" required="">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Tahun Terbit</label>
-                                            <div class="col-sm-12">
-                                                <input type="date" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Enter Tahun Terbit" value="" maxlength="50" required="">
+                                             <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" value="" maxlength="50" required="">
                                             </div>
                                         </div>
 
                                         <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                             </button>
 
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Cancel
+                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
                                             </button>
                                         </div>
                                     </form>
@@ -106,7 +106,7 @@ $(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('buku.index') }}",
+        ajax: "{{ url('buku') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_buku', name: 'kode_buku'},
@@ -122,13 +122,13 @@ $(function () {
         $('#saveBtn').val("create-buku");
         $('#buku_id').val('');
         $('#bukuForm').trigger("reset");
-        $('#modelHeading').html("Create New Buku");
+        $('#modelHeading').html("Buat Buku");
         $('#ajaxModel').modal('show');
     });
 
     $('body').on('click', '.editBuku', function () {
     var buku_id = $(this).data('id');
-    $.get("{{ route('buku.index') }}" +'/' + buku_id +'/edit', function (data) {
+    $.get("{{ url('buku') }}" +'/' + buku_id +'/edit', function (data) {
         $('#modelHeading').html("Edit Buku");
         $('#saveBtn').val("edit-user");
         $('#ajaxModel').modal('show');
@@ -143,17 +143,17 @@ $(function () {
 
     $('#saveBtn').click(function (e) {
         e.preventDefault();
-        $(this).html('Save Changes');
+        $(this).html('Simpan');
 
         $.ajax({
         data: $('#bukuForm').serialize(),
-        url: "{{ route('buku.store') }}",
+        url: "{{ url('buku-store') }}",
         type: "POST",
         dataType: 'json',
         success: function (data) {
             Swal.fire(
-            'Success',
-            'You clicked the button!',
+            'Berhasil',
+            'Klik OK',
             'success'
             )
             $('#bukuForm').trigger("reset");
@@ -172,8 +172,8 @@ $(function () {
 
         var buku_id = $(this).data("id");
         Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Apakah Kamu Yakin?',
+        text: "Kamu Tidak Dapat Mengembalikannya Lagi!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -183,7 +183,7 @@ $(function () {
         if (result.value) {
             $.ajax({
                 type: "DELETE",
-                url: "{{ route('buku.store') }}"+'/'+buku_id,
+                url: "{{ url('buku-store') }}"+'/'+buku_id,
                 success: function (data) {
                     table.draw();
                 },
@@ -192,8 +192,8 @@ $(function () {
                 }
             });
             Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
+            'Hapus!',
+            'Berhasil Dihapus.',
             'success'
             )
         }
