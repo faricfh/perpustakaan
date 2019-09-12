@@ -24,7 +24,7 @@
                                     <th>Jenis Kelamin</th>
                                     <th>Jurusan</th>
                                     <th width="280px">Alamat</th>
-                                    <th>Aksi</th>
+                                    <th width="100px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,6 +40,7 @@
                                 </div>
 
                                 <div class="modal-body">
+                                    <div class="alert alert-danger" style="display:none"></div>
                                     <form id="anggotaForm" name="anggotaForm" class="form-horizontal" >
                                     <input type="hidden" name="anggota_id" id="anggota_id">
 
@@ -60,7 +61,16 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Jenis Kelamin</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="jk" name="jk" placeholder="Enter Jenis Kelamin" value="" maxlength="50" required="">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input jk" type="radio" id="customRadio1" value="Laki-laki" name="jk">
+                                                        <label for="customRadio1" class="custom-control-label">Laki-laki</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input jk" type="radio" id="customRadio2" value="Perempuan" name="jk">
+                                                        <label for="customRadio2" class="custom-control-label">Perempuan</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -127,6 +137,8 @@ $(function () {
         $('#anggotaForm').trigger("reset");
         $('#modelHeading').html("Buat Anggota");
         $('#ajaxModel').modal('show');
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
     });
 
     $('body').on('click', '.editAnggota', function () {
@@ -138,9 +150,15 @@ $(function () {
         $('#anggota_id').val(data.id);
         $('#kode_anggota').val(data.kode_anggota);
         $('#nama').val(data.nama);
-        $('#jk').val(data.jk);
+        if(data.jk == 'Laki-laki'){
+            $("input[name='jk'][value='Laki-laki']").prop('checked', true);
+        }else{
+            $("input[name='jk'][value='Perempuan']").prop('checked', true);
+        }
         $('#jurusan').val(data.jurusan);
         $('#alamat').val(data.alamat);
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
     })
 });
 
@@ -154,21 +172,31 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
-            Swal.fire(
-            'Berhasil',
-            'Klik OK',
-            'success'
-            )
+            Swal.fire({
+                position : 'center',
+                type : 'success',
+                animation : 'false',
+                title : 'Berhasil di Simpan',
+                showConfirmButton : false,
+                timer : 1000,
+                customClass : {
+                    popup : 'animated bounceOut'
+                }
+            })
             $('#anggotaForm').trigger("reset");
             $('#ajaxModel').modal('hide');
             table.draw();
 
         },
-        error: function (data) {
-            console.log('Error:', data);
-            $('#saveBtn').html('Simpan');
-        }
-    });
+        error: function (request, status, error) {
+                $('.alert-danger').html('');
+                json = $.parseJSON(request.responseText);
+                $.each(json.errors, function(key, value){
+                    $('.alert-danger').show();
+                    $('.alert-danger').append('<p>'+value+'</p>');
+                });
+            }
+        });
     });
 
     $('body').on('click', '.deleteAnggota', function () {
@@ -207,7 +235,13 @@ $(function () {
             $('#anggotaForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
-    })
+    });
+
+    $(function() {
+        $('input').keypress(function() {
+            $('.alert-danger').css('display','none');
+        });
+    });
 
 });
 </script>

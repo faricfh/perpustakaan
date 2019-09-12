@@ -43,6 +43,7 @@
                                 </div>
 
                                 <div class="modal-body">
+                                    <div class="alert alert-danger" style="display:none"></div>
                                     <form id="peminjamanForm" name="peminjamanForm" class="form-horizontal" >
                                     <input type="hidden" name="peminjaman_id" id="peminjaman_id">
 
@@ -147,6 +148,8 @@ $(function () {
         $('#peminjamanForm').trigger("reset");
         $('#modelHeading').html("Buat Peminjaman");
         $('#ajaxModel').modal('show');
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
     });
 
      $.ajax({
@@ -210,6 +213,8 @@ $(function () {
             $('#kode_petugas').val(data.kode_petugas);
             $('#kode_anggota').val(data.kode_anggota);
             $('#kode_buku').val(data.kode_buku);
+            $('.alert-danger').html('');
+            $('.alert-danger').css('display','none');
         })
     });
 
@@ -222,19 +227,29 @@ $(function () {
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                Swal.fire(
-                'Berhasil',
-                'Klik OK',
-                'success'
-                )
+                Swal.fire({
+                    position : 'center',
+                    type : 'success',
+                    animation : 'false',
+                    title : 'Berhasil di Simpan',
+                    showConfirmButton : false,
+                    timer : 1000,
+                    customClass : {
+                        popup : 'animated bounceOut'
+                    }
+                })
                 $('#peminjamanForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
 
             },
-            error: function (data) {
-                console.log('Error:', data);
-                $('#saveBtn').html('Simpan');
+            error: function (request, status, error) {
+                $('.alert-danger').html('');
+                json = $.parseJSON(request.responseText);
+                $.each(json.errors, function(key, value){
+                    $('.alert-danger').show();
+                    $('.alert-danger').append('<p>'+value+'</p>');
+                });
             }
         });
     });
@@ -275,7 +290,13 @@ $(function () {
             $('#peminjamanForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
-    })
+    });
+
+    $(function() {
+        $('input').keypress(function() {
+            $('.alert-danger').css('display','none');
+        });
+    });
 });
 </script>
 @endsection

@@ -48,3 +48,7 @@ Route::delete('/rak-store/{id}', 'RakController@destroy');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

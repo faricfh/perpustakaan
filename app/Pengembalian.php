@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pengembalian extends Model
 {
     protected $fillable = [
-        'kode_kembali', 'tanggal_kembali', 'jatuh_tempo', 'denda_per_hari', 'jumlah_hari', 'total_denda', 'kode_petugas', 'kode_anggota', 'kode_buku'
+        'kode_kembali', 'kode_pinjam', 'tanggal_kembali', 'jatuh_tempo', 'denda_per_hari', 'jumlah_hari', 'total_denda', 'kode_petugas', 'kode_anggota', 'kode_buku'
     ];
 
     public function petugas()
@@ -23,5 +23,10 @@ class Pengembalian extends Model
     public function buku()
     {
         return $this->belongsTo('App\Buku', 'kode_buku');
+    }
+
+    public function peminjaman()
+    {
+        return $this->belongsTo('App\Peminjaman', 'kode_pinjam');
     }
 }

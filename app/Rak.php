@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Rak extends Model
 {
     protected $fillable = [
-        'kode_rak', 'nama_rak', 'kode_buku'
+        'kode_rak', 'nama_rak'
     ];
 
     public function buku()
     {
-        return $this->belongsTo('App\Buku', 'kode_buku');
+        return $this->belongsToMany('App\Buku', 'rak_buku', 'id_rak', 'id_buku');
     }
 }

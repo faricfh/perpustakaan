@@ -21,7 +21,9 @@ class PeminjamanController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editPeminjaman">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deletePeminjaman">Hapus</a>';
+                    if ($row->pengembalian->count() == 0) {
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deletePeminjaman">Hapus</a>';
+                    }
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -48,6 +50,15 @@ class PeminjamanController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'kode_pinjam' => 'required|min:4|max:10',
+            'tanggal_pinjam' => 'required',
+            'tanggal_kembali' => 'required',
+            'kode_petugas' => 'required',
+            'kode_anggota' => 'required',
+            'kode_buku' => 'required'
+        ]);
+
         Peminjaman::updateOrCreate(
             ['id' => $request->peminjaman_id],
             [

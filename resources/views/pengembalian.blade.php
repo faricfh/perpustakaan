@@ -22,6 +22,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Kode Kembali</th>
+                                    <th>Kode Pinjam</th>
                                     <th>Tanggal Kembali</th>
                                     <th>Jatuh Tempo</th>
                                     <th>Denda Per Hari</th>
@@ -46,6 +47,7 @@
                                 </div>
 
                                 <div class="modal-body">
+                                    <div class="alert alert-danger" style="display:none"></div>
                                     <form id="pengembalianForm" name="pengembalianForm" class="form-horizontal" >
                                     <input type="hidden" name="pengembalian_id" id="pengembalian_id">
 
@@ -53,6 +55,14 @@
                                             <label for="name" class="col-sm-2 control-label">Kode Kembali</label>
                                             <div class="col-sm-12">
                                                 <input type="text" class="form-control" id="kode_kembali" name="kode_kembali" placeholder="Kode Kembali" value="" maxlength="50" required="">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">Kode Pinjam</label>
+                                            <div class="col-sm-12">
+                                                <select name="kode_pinjam" class="form-control" id="kode_pinjam">
+                                                </select>
                                             </div>
                                         </div>
 
@@ -135,6 +145,7 @@ $(function () {
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_kembali', name: 'kode_kembali'},
+            {data: 'kode_pinjam', name: 'kode_pinjam'},
             {data: 'tanggal_kembali', name: 'tanggal_kembali'},
             {data: 'jatuh_tempo', name: 'jatuh_tempo'},
             {data: 'denda_per_hari', name: 'denda_per_hari'},
@@ -153,6 +164,8 @@ $(function () {
         $('#pengembalianForm').trigger("reset");
         $('#modelHeading').html("Buat Pengembalian");
         $('#ajaxModel').modal('show');
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
     });
 
      $.ajax({
@@ -203,6 +216,22 @@ $(function () {
         },
     });
 
+    $.ajax({
+        url: "{{ url('peminjaman') }}",
+        method: "GET",
+        dataType: "json",
+        success: function (berhasil) {
+            console.log(berhasil)
+            $.each(berhasil.data, function (key, value) {
+                $("#kode_pinjam").append(
+                    `
+                        <option value="${value.id}">${value.kode_pinjam}</option>
+                    `
+                )
+            })
+        },
+    });
+
     $('body').on('click', '.editPengembalian', function () {
         var pengembalian_id = $(this).data('id');
         $.get("{{ url('pengembalian') }}" +'/' + pengembalian_id +'/edit', function (data) {
@@ -211,11 +240,14 @@ $(function () {
             $('#ajaxModel').modal('show');
             $('#pengembalian_id').val(data.id);
             $('#kode_kembali').val(data.kode_kembali);
+            $('#kode_pinjam').val(data.kode_pinjam);
             $('#jatuh_tempo').val(data.jatuh_tempo);
             $('#tanggal_kembali').val(data.tanggal_kembali);
             $('#kode_petugas').val(data.kode_petugas);
             $('#kode_anggota').val(data.kode_anggota);
             $('#kode_buku').val(data.kode_buku);
+            $('.alert-danger').html('');
+            $('.alert-danger').css('display','none');
         })
     });
 
@@ -228,19 +260,29 @@ $(function () {
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                Swal.fire(
-                'Berhasil',
-                'Klik OK',
-                'success'
-                )
+                Swal.fire({
+                    position : 'center',
+                    type : 'success',
+                    animation : 'false',
+                    title : 'Berhasil di Simpan',
+                    showConfirmButton : false,
+                    timer : 1000,
+                    customClass : {
+                        popup : 'animated bounceOut'
+                    }
+                })
                 $('#pengembalianForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
 
             },
-            error: function (data) {
-                console.log('Error:', data);
-                $('#saveBtn').html('Simpan');
+            error: function (request, status, error) {
+                $('.alert-danger').html('');
+                json = $.parseJSON(request.responseText);
+                $.each(json.errors, function(key, value){
+                    $('.alert-danger').show();
+                    $('.alert-danger').append('<p>'+value+'</p>');
+                });
             }
         });
     });
@@ -281,7 +323,13 @@ $(function () {
             $('#pengembalianForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
-    })
+    });
+
+    $(function() {
+        $('input').keypress(function() {
+            $('.alert-danger').css('display','none');
+        });
+    });
 });
 </script>
 @endsection

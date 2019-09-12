@@ -17,7 +17,13 @@ class CreateRaksTable extends Migration
             $table->bigIncrements('id');
             $table->string('kode_rak');
             $table->string('nama_rak');
-            $table->unsignedBigInteger('kode_buku');
+            $table->timestamps();
+        });
+
+        Schema::create('rak_buku', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedInteger('id_rak');
+            $table->unsignedInteger('id_buku');
             $table->timestamps();
         });
     }
@@ -30,5 +36,6 @@ class CreateRaksTable extends Migration
     public function down()
     {
         Schema::dropIfExists('raks');
+        Schema::dropIfExists('rak_buku');
     }
 }

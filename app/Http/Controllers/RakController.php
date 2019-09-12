@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Rak;
+use App\Buku;
 use DataTables;
 
 class RakController extends Controller
@@ -48,14 +49,20 @@ class RakController extends Controller
      */
     public function store(Request $request)
     {
-        Rak::updateOrCreate(
+        $request->validate([
+            'kode_rak' => 'required|min:4|max:10',
+            'nama_rak' => 'required',
+            'buku' => 'required'
+        ]);
+
+        $rak = Rak::updateOrCreate(
             ['id' => $request->rak_id],
             [
                 'kode_rak' => $request->kode_rak,
-                'nama_rak' => $request->nama_rak,
-                'kode_buku' => $request->kode_buku
+                'nama_rak' => $request->nama_rak
             ]
         );
+        $rak->buku()->sync($request->buku);
         return response()->json(['success' => 'rak saved successfully.']);
     }
 
@@ -79,7 +86,21 @@ class RakController extends Controller
     public function edit($id)
     {
         $rak = Rak::find($id);
-        return response()->json($rak);
+        $data_rak = ['id' => $rak->id, 'nama_rak' => $rak->nama_rak, 'kode_rak' => $rak->kode_rak];
+        $buku = \DB::select('SELECT b.id,b.judul,rb.id_rak
+                            FROM bukus AS b
+                            left JOIN rak_buku AS rb ON rb.id_buku = b.id
+                            AND rb.id_rak=' . $rak->id . '
+                            ');
+        foreach ($buku as $value) {
+            $option[] = '<option value="' . $value->id . '" ' . ($value->id_rak == $rak->id ? 'selected' : '') . '>' . $value->judul . '</option>';
+        }
+
+        $test = implode('', $option);
+
+        $data = ['datarak' => $data_rak, 'buku' => $test, 'rak' => $rak];
+
+        return response()->json($data);
     }
 
     /**

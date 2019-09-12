@@ -21,7 +21,9 @@ class AnggotaController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editAnggota">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteAnggota">Hapus</a>';
+                    if ($row->peminjaman->count() == 0) {
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteAnggota">Hapus</a>';
+                    }
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -44,6 +46,14 @@ class AnggotaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'kode_anggota' => 'required|min:4|max:10',
+            'nama' => 'required',
+            'jk' => 'required',
+            'jurusan' => 'required',
+            'alamat' => 'required'
+        ]);
+
         Anggota::updateOrCreate(
             ['id' => $request->anggota_id],
             [

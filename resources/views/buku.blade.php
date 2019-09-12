@@ -18,11 +18,11 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Kode Buku</th>
-                                    <th>Judul</th>
+                                    <th widh="280px">Judul</th>
                                     <th>Penulis</th>
-                                    <th>Penerbit</th>
-                                    <th>Tahun Terbit</th>
-                                    <th>Aksi</th>
+                                    <th widh="280px">Penerbit</th>
+                                    <th widh="50px">Tahun Terbit</th>
+                                    <th widh="100px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,6 +39,7 @@
                                 </div>
 
                                 <div class="modal-body">
+                                    <div class="alert alert-danger" style="display:none"></div>
                                     <form id="bukuForm" name="bukuForm" class="form-horizontal">
                                     <input type="hidden" name="buku_id" id="buku_id">
                                         <div class="form-group">
@@ -51,7 +52,8 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Judul</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control @error('judul') is-invalid @enderror" id="judul" name="judul" placeholder="Judul" value="" maxlength="50" required="">
+
                                             </div>
                                         </div>
 
@@ -124,22 +126,28 @@ $(function () {
         $('#bukuForm').trigger("reset");
         $('#modelHeading').html("Buat Buku");
         $('#ajaxModel').modal('show');
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
     });
 
     $('body').on('click', '.editBuku', function () {
     var buku_id = $(this).data('id');
-    $.get("{{ url('buku') }}" +'/' + buku_id +'/edit', function (data) {
-        $('#modelHeading').html("Edit Buku");
-        $('#saveBtn').val("edit-user");
-        $('#ajaxModel').modal('show');
-        $('#buku_id').val(data.id);
-        $('#kode_buku').val(data.kode_buku);
-        $('#judul').val(data.judul);
-        $('#penulis').val(data.penulis);
-        $('#penerbit').val(data.penerbit);
-        $('#tahun_terbit').val(data.tahun_terbit);
-    })
-});
+        $.get("{{ url('buku') }}" +'/' + buku_id +'/edit', function (data) {
+            $('#modelHeading').html("Edit Buku");
+            $('#saveBtn').val("edit-user");
+            $('#ajaxModel').modal('show');
+            $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
+            $('#buku_id').val(data.id);
+            $('#kode_buku').val(data.kode_buku);
+            $('#judul').val(data.judul);
+            $('#penulis').val(data.penulis);
+            $('#penerbit').val(data.penerbit);
+            $('#tahun_terbit').val(data.tahun_terbit);
+            $('.alert-danger').html('');
+            $('.alert-danger').css('display','none');
+        });
+    });
 
     $('#saveBtn').click(function (e) {
         e.preventDefault();
@@ -151,21 +159,32 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
-            Swal.fire(
-            'Berhasil',
-            'Klik OK',
-            'success'
-            )
+            Swal.fire({
+                position : 'center',
+                type : 'success',
+                animation : 'false',
+                title : 'Berhasil di Simpan',
+                showConfirmButton : false,
+                timer : 1000,
+                customClass : {
+                    popup : 'animated bounceOut'
+                }
+            })
             $('#bukuForm').trigger("reset");
             $('#ajaxModel').modal('hide');
             table.draw();
 
         },
-        error: function (data) {
-            console.log('Error:', data);
-            $('#saveBtn').html('Save Changes');
-        }
-    });
+        error: function (request, status, error) {
+                $('.alert-danger').html('');
+                json = $.parseJSON(request.responseText);
+                console.log(json);
+                $.each(json.errors, function(key, value){
+                    $('.alert-danger').show();
+                    $('.alert-danger').append('<p>'+value+'</p>');
+                });
+            }
+        });
     });
 
     $('body').on('click', '.deleteBuku', function () {
@@ -206,6 +225,12 @@ $(function () {
             $('#ajaxModel').modal('hide');
         $
     })
+
+    $(function() {
+        $('input').keypress(function() {
+            $('.alert-danger').css('display','none');
+        });
+    });
 
 });
 </script>

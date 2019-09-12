@@ -40,33 +40,44 @@
                                 </div>
 
                                 <div class="modal-body">
+                                <div class="alert alert-danger" style="display:none"></div>
+                                <div id="result"></div>
                                     <form id="petugasForm" name="petugasForm" class="form-horizontal">
                                     <input type="hidden" name="petugas_id" id="petugas_id">
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Kode Petugas</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_petugas" name="kode_petugas" placeholder="Enter Kode Petugas" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="kode_petugas" name="kode_petugas" placeholder="Enter Kode Petugas" value="" maxlength="50" required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Nama</label>
                                             <div class="col-sm-12">
-                                                <input type="text" id="nama" name="nama" required="" placeholder="Enter Nama" class="form-control">
+                                                <input type="text" id="nama" name="nama" placeholder="Enter Nama" class="form-control" required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Jenis Kelamin</label>
                                             <div class="col-sm-12">
-                                                <input type="text" id="jk" name="jk" required="" placeholder="Enter Jenis Kelamin" class="form-control">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input jk" type="radio" id="customRadio1" value="Laki-laki" name="jk">
+                                                        <label for="customRadio1" class="custom-control-label">Laki-laki</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input jk" type="radio" id="customRadio2" value="Perempuan" name="jk">
+                                                        <label for="customRadio2" class="custom-control-label">Perempuan</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Jabatan</label>
                                             <div class="col-sm-12">
-                                                <input type="text" id="jabatan" name="jabatan" required="" placeholder="Enter Jabaran" class="form-control">
+                                                <input type="text" id="jabatan" name="jabatan" required="" placeholder="Enter Jabatan" class="form-control">
                                             </div>
                                         </div>
 
@@ -135,6 +146,8 @@ $(function () {
         $('#petugasForm').trigger("reset");
         $('#modelHeading').html("Create New Petugas");
         $('#ajaxModel').modal('show');
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
 
     });
 
@@ -147,10 +160,16 @@ $(function () {
         $('#petugas_id').val(data.id);
         $('#kode_petugas').val(data.kode_petugas);
         $('#nama').val(data.nama);
-        $('#jk').val(data.jk);
+        if(data.jk == 'Laki-laki'){
+            $("input[name='jk'][value='Laki-laki']").prop('checked', true);
+        }else{
+            $("input[name='jk'][value='Perempuan']").prop('checked', true);
+        }
         $('#jabatan').val(data.jabatan);
         $('#telp').val(data.telp);
         $('#alamat').val(data.alamat);
+        $('.alert-danger').html('');
+        $('.alert-danger').css('display','none');
         })
     });
 
@@ -164,20 +183,31 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
-            Swal.fire(
-            'Berhasil',
-            'Klik OK',
-            'success'
-            )
+            Swal.fire({
+                position : 'center',
+                type : 'success',
+                animation : 'false',
+                title : 'Berhasil di Simpan',
+                showConfirmButton : false,
+                timer : 1000,
+                customClass : {
+                    popup : 'animated bounceOut'
+                }
+            })
             $('#petugasForm').trigger("reset");
             $('#ajaxModel').modal('hide');
             table.draw();
         },
-        error: function (data) {
-            console.log('Error:', data);
-            $('#saveBtn').html('Simpan');
-        }
-    });
+        error: function (request, status, error) {
+                $('.alert-danger').html('');
+                json = $.parseJSON(request.responseText);
+                $.each(json.errors, function(key, value){
+                    $('.alert-danger').show();
+                    $('.alert-danger').append('<p>'+value+'</p>');
+                });
+
+            }
+        });
     });
 
     $('body').on('click', '.deletePetugas', function () {
@@ -216,7 +246,13 @@ $(function () {
             $('#petugasForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
-    })
+    });
+
+    $(function() {
+        $('input').keypress(function() {
+            $('.alert-danger').css('display','none');
+        });
+    });
 });
 </script>
 @endsection

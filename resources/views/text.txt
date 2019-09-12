@@ -40,10 +40,9 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <div class="alert alert-danger" style="display:none"></div>
                                     <form id="rakForm" name="rakForm" class="form-horizontal" >
                                     <input type="hidden" name="rak_id" id="rak_id">
-
+                                        <input type="hidden" id="databuku" name="data[]">
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Kode Rak</label>
                                             <div class="col-sm-12">
@@ -117,6 +116,22 @@ $(function () {
         ]
     });
 
+    $('#rakForm').validate({
+        rules: {
+            kode_rak: {
+                required : true,
+                maxlength : 10,
+                minlength : 4
+            },
+            nama_rak: {
+                required: true
+            },
+            kode_buku: {
+                required: true
+            }
+        }
+    });
+
     $('#createNewRak').click(function () {
         $('#saveBtn').val("create-rak");
         $('#rak_id').val('');
@@ -124,24 +139,28 @@ $(function () {
         $('#buku').val('').trigger('change');
         $('#modelHeading').html("Buat Rak");
         $('#ajaxModel').modal('show');
-        $('.alert-danger').html('');
-        $('.alert-danger').css('display','none');
     });
 
+    function optionBuku(value,databuku){
+        console.log(databuku);
+        $("#buku").append(
+            `
+            <option value="${value.id}" (databuku == value.id ? 'selected' : '')>
+                ${value.judul}
+            </option>
+            `
+        );
+    }
+
     $.ajax({
+
         url: "{{ url('buku') }}",
         method: "GET",
         dataType: "json",
         success: function (berhasil) {
             console.log(berhasil)
             $.each(berhasil.data, function (key, value) {
-                $("#buku").append(
-                    `
-                    <option value="${value.id}">
-                        ${value.judul}
-                    </option>
-                    `
-                )
+                optionBuku(value,databuku)
             })
         },
         // (id_buku[key] == value.id ? 'selected' : '')
@@ -151,18 +170,22 @@ $(function () {
     });
 
     $('body').on('click', '.editRak', function () {
+        var value = '';
         var rak_id = $(this).data('id');
         $.get("{{ url('/rak') }}" +'/' + rak_id +'/edit', function (data) {
             $('#modelHeading').html("Edit Anggota");
             $('#saveBtn').val("edit-user");
             $('#ajaxModel').modal('show');
-            $('#rak_id').val(data.rak.id);
-            $('#kode_rak').val(data.rak.kode_rak);
-            $('#nama_rak').val(data.rak.nama_rak);
-            $('.alert-danger').html('');
-            $('#buku').html('');
-            $('#buku').html(data.buku);
-            $('.alert-danger').css('display','none');
+            $('#rak_id').val(data.id);
+            $('#kode_rak').val(data.kode_rak);
+            $('#nama_rak').val(data.nama_rak);
+            var buku_id = [];
+            $.each(data.buku, function (key, value) {
+                buku_id.push(value.id_buku);
+            });
+
+            $('#databuku').val(buku_id);
+            optionBuku(value,buku_id)
         })
     });
 
@@ -175,29 +198,19 @@ $(function () {
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                Swal.fire({
-                position : 'center',
-                type : 'success',
-                animation : 'false',
-                title : 'Berhasil di Simpan',
-                showConfirmButton : false,
-                timer : 1000,
-                customClass : {
-                    popup : 'animated bounceOut'
-                }
-            })
+                Swal.fire(
+                'Berhasil',
+                'Klik OK',
+                'success'
+                )
                 $('#rakForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
 
             },
-            error: function (request, status, error) {
-                $('.alert-danger').html('');
-                json = $.parseJSON(request.responseText);
-                $.each(json.errors, function(key, value){
-                    $('.alert-danger').show();
-                    $('.alert-danger').append('<p>'+value+'</p>');
-                });
+            error: function (data) {
+                console.log('Error:', data);
+                $('#saveBtn').html('Simpan');
             }
         });
     });
@@ -238,13 +251,7 @@ $(function () {
             $('#rakForm').trigger("reset");
             $('#ajaxModel').modal('hide');
         $
-    });
-
-    $(function() {
-        $('input').keypress(function() {
-            $('.alert-danger').css('display','none');
-        });
-    });
+    })
 });
 </script>
 @endsection

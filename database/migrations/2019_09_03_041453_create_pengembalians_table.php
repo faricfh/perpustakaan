@@ -16,6 +16,7 @@ class CreatePengembaliansTable extends Migration
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('kode_kembali');
+            $table->unsignedBigInteger('kode_pinjam');
             $table->date('tanggal_kembali');
             $table->date('jatuh_tempo');
             $table->double('denda_per_hari');

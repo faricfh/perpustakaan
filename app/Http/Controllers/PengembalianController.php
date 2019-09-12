@@ -48,6 +48,16 @@ class PengembalianController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'kode_kembali' => 'required|min:4|max:10',
+            'kode_pinjam' => 'required',
+            'tanggal_kembali' => 'required',
+            'jatuh_tempo' => 'required',
+            'kode_petugas' => 'required',
+            'kode_anggota' => 'required',
+            'kode_buku' => 'required'
+        ]);
+
         $tanggal_kembali = strtotime($request->tanggal_kembali);
         $jatuh_tempo = strtotime($request->jatuh_tempo);
         $jumlah = $tanggal_kembali - $jatuh_tempo;
@@ -63,6 +73,7 @@ class PengembalianController extends Controller
             ['id' => $request->pengembalian_id],
             [
                 'kode_kembali' => $request->kode_kembali,
+                'kode_pinjam' => $request->kode_pinjam,
                 'tanggal_kembali' => $request->tanggal_kembali,
                 'jatuh_tempo' => $request->jatuh_tempo,
                 'denda_per_hari' => 2000,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Buku;
 use DataTables;
+use Session;
 
 class BukuController extends Controller
 {
@@ -22,7 +23,9 @@ class BukuController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editBuku">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteBuku">Hapus</a>';
+                    if ($row->rak->count() == 0) {
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteBuku">Hapus</a>';
+                    }
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -49,6 +52,14 @@ class BukuController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'kode_buku' => 'min:4|max:10',
+            'judul' => 'required',
+            'penerbit' => 'required',
+            'penulis' => 'required',
+            'tahun_terbit' => 'required'
+        ]);
+
         Buku::updateOrCreate(
             ['id' => $request->buku_id],
             [

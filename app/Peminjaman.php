@@ -24,4 +24,9 @@ class Peminjaman extends Model
     {
         return $this->belongsTo('App\Buku', 'kode_buku');
     }
+
+    public function pengembalian()
+    {
+        return $this->hasMany('App\Pengembalian', 'kode_pinjam');
+    }
 }

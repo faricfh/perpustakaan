@@ -18,3 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('anggota', 'Api\AnggotaController@index');
+
+Route::get('rak/{id}/edit', 'Api\RakController@edit');

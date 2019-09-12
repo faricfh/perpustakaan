@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class Buku extends Model
 {
@@ -12,7 +13,7 @@ class Buku extends Model
 
     public function rak()
     {
-        return $this->hasMany('App\Rak', 'kode_buku');
+        return $this->belongsToMany('App\Rak', 'rak_buku', 'id_buku', 'id_rak');
     }
 
     public function peminjaman()

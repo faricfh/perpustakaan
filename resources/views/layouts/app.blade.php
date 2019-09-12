@@ -19,10 +19,14 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    {{-- validasi --}}
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
     {{-- swetaler --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
     {{-- select2 --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     {{--  add ajax --}}
 
@@ -108,7 +112,7 @@
                 </div>
             </div>
         </nav>
-
+        @include('layouts.flash')
         <main class="py-4">
             @yield('content')
         </main>
