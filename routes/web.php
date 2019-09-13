@@ -24,6 +24,7 @@ Route::get('/pengembalian', 'PengembalianController@index');
 Route::post('/pengembalian-store', 'PengembalianController@store');
 Route::get('/pengembalian/{id}/edit', 'PengembalianController@edit');
 Route::delete('/pengembalian-store/{id}', 'PengembalianController@destroy');
+Route::get('/pengembalian-db/{id}', 'PengembalianController@db');
 
 Route::get('/petugas', 'PetugasController@index');
 Route::post('/petugas-store', 'PetugasController@store');

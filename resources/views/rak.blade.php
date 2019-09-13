@@ -61,9 +61,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <label>Buku</label>
-                                                <div class="col-sm-12">
-                                                    <select name="buku[]" class="buku" id="buku" style="width:100%" multiple="multiple"></select>
-                                                </div>
+                                                <select name="buku[]" class="buku" id="buku" style="width:100%" multiple="multiple"></select>
                                             </div>
                                         </div>
 
@@ -101,6 +99,11 @@ $(function () {
         }
     });
 
+    $('#buku').select2({
+        maximumSelectionLength : 4,
+        tags : true
+    })
+
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
@@ -118,6 +121,7 @@ $(function () {
     });
 
     $('#createNewRak').click(function () {
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false})  
         $('#saveBtn').val("create-rak");
         $('#rak_id').val('');
         $('#rakForm').trigger("reset");

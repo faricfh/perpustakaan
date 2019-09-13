@@ -5,116 +5,110 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-13">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+        <div class="container">
+            <br>
+            <h1>Perpustakaan - Pengembalian</h1>
+            <a class="btn btn-success" href="javascript:void(0)" id="createNewPengembalian">Buat Pengembalian</a>
+            <br>
+            <br/>
 
-                <div class="card-body">
-                    <div class="container">
-                        <br>
-                        <h1>Perpustakaan - Pengembalian</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewPengembalian">Buat Pengembalian</a>
-                        <br>
-                        <br/>
+            <table class="table table-bordered data-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Kembali</th>
+                        <th>Kode Pinjam</th>
+                        <th>Tanggal Kembali</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Denda Per Hari</th>
+                        <th>Jumlah Hari</th>
+                        <th>Total Denda</th>
+                        <th>Petugas</th>
+                        <th>Anggota</th>
+                        <th>Buku</th>
+                        <th width="100px">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
 
-                        <table class="table table-bordered data-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kode Kembali</th>
-                                    <th>Kode Pinjam</th>
-                                    <th>Tanggal Kembali</th>
-                                    <th>Jatuh Tempo</th>
-                                    <th>Denda Per Hari</th>
-                                    <th>Jumlah Hari</th>
-                                    <th>Total Denda</th>
-                                    <th>Petugas</th>
-                                    <th>Anggota</th>
-                                    <th>Buku</th>
-                                    <th width="200px">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+        <div class="modal fade" id="ajaxModel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modelHeading"></h4>
                     </div>
 
-                    <div class="modal fade" id="ajaxModel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="modelHeading"></h4>
-                                </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" style="display:none"></div>
+                        <form id="pengembalianForm" name="pengembalianForm" class="form-horizontal" >
+                        <input type="hidden" name="pengembalian_id" id="pengembalian_id">
 
-                                <div class="modal-body">
-                                    <div class="alert alert-danger" style="display:none"></div>
-                                    <form id="pengembalianForm" name="pengembalianForm" class="form-horizontal" >
-                                    <input type="hidden" name="pengembalian_id" id="pengembalian_id">
-
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Kode Kembali</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_kembali" name="kode_kembali" placeholder="Kode Kembali" value="" maxlength="50" required="">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Kode Pinjam</label>
-                                            <div class="col-sm-12">
-                                                <select name="kode_pinjam" class="form-control" id="kode_pinjam">
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Tanggal Kembali</label>
-                                            <div class="col-sm-12">
-                                                <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" placeholder="Tanggal Kembali" value="" maxlength="50" required="">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Jatuh Tempo</label>
-                                            <div class="col-sm-12">
-                                                <input type="date" class="form-control" id="jatuh_tempo" name="jatuh_tempo" placeholder="Jatuh Tempo" value="" maxlength="50" required="">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label>Petugas</label>
-                                                <select name="kode_petugas" class="form-control" id="kode_petugas">
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label>Anggota</label>
-                                                <select name="kode_anggota" class="form-control" id="kode_anggota">
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label>Buku</label>
-                                                <select name="kode_buku" class="form-control" id="kode_buku">
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
-                                            </button>
-
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
-                                            </button>
-                                        </div>
-                                    </form>
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">Kode Kembali</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="kode_kembali" name="kode_kembali" placeholder="Kode Kembali" value="" maxlength="50" required="">
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">Kode Pinjam</label>
+                                <div class="col-sm-12">
+                                    <select name="kode_pinjam" class="form-control" id="kode_pinjam">
+                                        <option value="">Pilih Kode Pinjam</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">Tanggal Kembali</label>
+                                <div class="col-sm-12">
+                                    <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" placeholder="Tanggal Kembali" value="" maxlength="50" required="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">Jatuh Tempo</label>
+                                <div class="col-sm-12">
+                                    <input type="hidden" name="jatuh_tempo" class="jatuh_tempo" value="">
+                                    <input type="date" class="form-control" id="jatuh_tempo" placeholder="Jatuh Tempo" value="" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <label>Petugas</label>
+                                    <input type="hidden" name="kode_petugas" class="kode_petugas" value="">
+                                    <input type="text" class="form-control" id="kode_petugas" placeholder="Nama Petugas" value="" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <label>Anggota</label>
+                                    <input type="hidden" name="kode_anggota" class="kode_anggota" value="">
+                                    <input type="text" class="form-control" id="kode_anggota" placeholder="Nama Anggota" value="" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <label>Buku</label>
+                                    <input type="hidden" name="kode_buku" class="kode_buku" value="">
+                                    <input type="text" class="form-control" id="kode_buku" placeholder="Nama Buku" value="" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
+                                </button>
+
+                                <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -145,7 +139,7 @@ $(function () {
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_kembali', name: 'kode_kembali'},
-            {data: 'kode_pinjam', name: 'kode_pinjam'},
+            {data: 'peminjaman.kode_pinjam', name: 'kode_pinjam'},
             {data: 'tanggal_kembali', name: 'tanggal_kembali'},
             {data: 'jatuh_tempo', name: 'jatuh_tempo'},
             {data: 'denda_per_hari', name: 'denda_per_hari'},
@@ -238,17 +232,20 @@ $(function () {
             $('#modelHeading').html("Edit Pengembalian");
             $('#saveBtn').val("edit-user");
             $('#ajaxModel').modal('show');
-            $('#pengembalian_id').val(data.id);
-            $('#kode_kembali').val(data.kode_kembali);
-            $('#kode_pinjam').val(data.kode_pinjam);
-            $('#jatuh_tempo').val(data.jatuh_tempo);
-            $('#tanggal_kembali').val(data.tanggal_kembali);
-            $('#kode_petugas').val(data.kode_petugas);
-            $('#kode_anggota').val(data.kode_anggota);
-            $('#kode_buku').val(data.kode_buku);
+            $('#pengembalian_id').val(data.kem.id);
+            $('#kode_kembali').val(data.kem.kode_kembali);
+            $('#kode_pinjam').val(data.kem.kode_pinjam);
+            $('#jatuh_tempo').val(data.kem.jatuh_tempo);
+            $('#tanggal_kembali').val(data.kem.tanggal_kembali);
+            $.each(data.dit, function(key, value){
+                console.log(data.dit);
+                $('#kode_anggota').val(value.nama_anggota);
+                $('#kode_petugas').val(value.nama_petugas);
+                $('#kode_buku').val(value.judul);
+            });
             $('.alert-danger').html('');
             $('.alert-danger').css('display','none');
-        })
+        });
     });
 
     $('#saveBtn').click(function (e) {
@@ -328,6 +325,27 @@ $(function () {
     $(function() {
         $('input').keypress(function() {
             $('.alert-danger').css('display','none');
+        });
+    });
+
+    $('#kode_pinjam').on('change', function(){
+        var kode_pinjam = $(this).val();
+        $.ajax({
+            url : 'pengembalian-db/'+kode_pinjam,
+            method : 'get',
+            dataType : 'json',
+            success : function (berhasil) {
+                $.each(berhasil, function(key, value){
+                    $('#kode_anggota').val(value.nama_anggota);
+                    $('#kode_petugas').val(value.nama_petugas);
+                    $('#kode_buku').val(value.judul);
+                    $('#jatuh_tempo').val(value.tanggal_kembali);
+                    $('.jatuh_tempo').val(value.tanggal_kembali);
+                    $('.kode_buku').val(value.id_judul);
+                    $('.kode_anggota').val(value.id_anggota);
+                    $('.kode_petugas').val(value.id_petugas);
+                });
+            },
         });
     });
 });

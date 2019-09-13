@@ -78,6 +78,14 @@
                                             <label for="name" class="col-sm-2 control-label">Jurusan</label>
                                             <div class="col-sm-12">
                                                 <input type="text" class="form-control" id="jurusan" name="jurusan" placeholder="Enter Jurusan" value="" maxlength="50" required="">
+                                                {{-- <select>
+                                                    <option>Pilih Jurusan</option>
+                                                    <option name="" id="" value="">Rekayasa Perangkat Lunak</option>
+                                                    <option name="" id="" value="">Teknik Komputer Jaringan</option>
+                                                    <option name="" id="" value="">Tata Boga</option>
+                                                    <option name="" id="" value="">Multimedia</option>
+                                                    <option name="" id="" value="">Audio Vidio</option>
+                                                </select> --}}
                                             </div>
                                         </div>
 

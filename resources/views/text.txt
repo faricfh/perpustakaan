@@ -143,6 +143,7 @@ $(function () {
 
     function optionBuku(value,databuku){
         console.log(databuku);
+        
         $("#buku").append(
             `
             <option value="${value.id}" (databuku == value.id ? 'selected' : '')>
