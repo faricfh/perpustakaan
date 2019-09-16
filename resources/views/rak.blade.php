@@ -121,12 +121,13 @@ $(function () {
     });
 
     $('#createNewRak').click(function () {
-        $('#ajaxModel').modal({backdrop: 'static', keyboard: false})  
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false})
         $('#saveBtn').val("create-rak");
         $('#rak_id').val('');
         $('#rakForm').trigger("reset");
         $('#buku').val('').trigger('change');
         $('#modelHeading').html("Buat Rak");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
@@ -159,6 +160,7 @@ $(function () {
         $.get("{{ url('/rak') }}" +'/' + rak_id +'/edit', function (data) {
             $('#modelHeading').html("Edit Anggota");
             $('#saveBtn').val("edit-user");
+            $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
             $('#ajaxModel').modal('show');
             $('#rak_id').val(data.rak.id);
             $('#kode_rak').val(data.rak.kode_rak);

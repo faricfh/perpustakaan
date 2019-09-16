@@ -19,6 +19,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    {{-- datepicker --}}
+    <link rel="stylesheet" href="{{ asset('css/datepicker.css') }}">
+
+    {{-- bootsraps --}}
+
     {{-- validasi --}}
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
@@ -117,6 +122,7 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
     @yield('js')
 </body>
 </html>

@@ -47,11 +47,20 @@ class AnggotaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_anggota' => 'required|min:4|max:10',
+            'kode_anggota' => 'required|min:4|max:10|unique:anggotas,kode_anggota,' . $request->anggota_id . ',id',
             'nama' => 'required',
             'jk' => 'required',
             'jurusan' => 'required',
             'alamat' => 'required'
+        ], [
+            'kode_anggota.required' => 'Kode Anggota Harus di Isi',
+            'kode_anggota.max' => 'Kode Anggota Harus di Isi Maksimal 10',
+            'kode_anggota.min' => 'Kode Anggota Harus di Isi Maksimal 4',
+            'kode_anggota.unique' => 'Kode Anggota Sudah Digunakan',
+            'nama.required' => 'Nama Harus di Isi',
+            'jk.required' => 'Jenis Kelamin Harus di Pilih',
+            'jurusan.required' => 'Jurusan Harus di Isi',
+            'alamat.required' => 'Alamat Harus di Pilih'
         ]);
 
         Anggota::updateOrCreate(

@@ -17,7 +17,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Buku</th>
+                                    <th width="100px">Kode Buku</th>
                                     <th widh="280px">Judul</th>
                                     <th>Penulis</th>
                                     <th widh="280px">Penerbit</th>
@@ -74,7 +74,14 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Tahun Terbit</label>
                                              <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" value="" maxlength="50" required="">
+                                                <select name="tahun_terbit" class="form-control" id="tahun_terbit">
+                                                     <option selected disabled>Pilih Tahun Terbit</option>
+                                                     <?php
+                                                        for ($x = 1900; $x <= 2020; $x++): ?>
+                                                            <option value="<?=$x;?>"><?=$x;?></option><?php
+                                                        endfor;
+                                                        ?>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -125,8 +132,8 @@ $(function () {
         $('#buku_id').val('');
         $('#bukuForm').trigger("reset");
         $('#modelHeading').html("Buat Buku");
-        $('#ajaxModel').modal('show');
         $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
+        $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
     });
@@ -136,8 +143,8 @@ $(function () {
         $.get("{{ url('buku') }}" +'/' + buku_id +'/edit', function (data) {
             $('#modelHeading').html("Edit Buku");
             $('#saveBtn').val("edit-user");
-            $('#ajaxModel').modal('show');
             $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
+            $('#ajaxModel').modal('show');
             $('#buku_id').val(data.id);
             $('#kode_buku').val(data.kode_buku);
             $('#judul').val(data.judul);

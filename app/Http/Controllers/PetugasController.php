@@ -57,12 +57,23 @@ class PetugasController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_petugas' => 'required|min:4|max:10',
+            'kode_petugas' => 'required|min:4|max:10|unique:petugas,kode_petugas,' . $request->petugas_id . ',id',
             'nama' => 'required',
             'jk' => 'required',
             'jabatan' => 'required',
-            'telp' => 'required',
+            'telp' => 'required|max:12',
             'alamat' => 'required'
+        ], [
+            'kode_petugas.required' => 'Kode Petugas Harus di Isi',
+            'kode_petugas.unique' => 'Kode Petugas Sudah Ada',
+            'kode_petugas.max' => 'Kode Petugas Harus di Isi Maksimal 10',
+            'kode_petugas.min' => 'Kode Petugas Harus di Isi Maksimal 4',
+            'nama.required' => 'Nama Harus di isi',
+            'jk.required' => 'Jenis Kelamin Harus di Pilih',
+            'jabatan.required' => 'Jabatan Harus di isi',
+            'telp.required' => 'No Telepon Harus di isi',
+            'telp.max' => 'No Telepon Maksimal 12',
+            'alamat.required' => 'Alamat Harus di isi'
         ]);
 
         Petugas::updateOrCreate(
@@ -76,7 +87,7 @@ class PetugasController extends Controller
                 'alamat' => $request->alamat
             ]
         );
-        return response()->json(['success' => 'Petugas saved successfully.']);
+        return response()->json(['success' => '' . $request->nama . ' Berhasil Di Simpan.']);
     }
 
     /**

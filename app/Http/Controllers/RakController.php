@@ -50,9 +50,16 @@ class RakController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_rak' => 'required|min:4|max:10',
+            'kode_rak' => 'required|min:4|max:10|unique:raks,kode_rak,' . $request->rak_id . ',id',
             'nama_rak' => 'required',
             'buku' => 'required'
+        ], [
+            'kode_rak.required' => 'Kode Rak Harus di Isi',
+            'kode_rak.max' => 'Kode Rak Harus di Isi Maksimal 10',
+            'kode_rak.min' => 'Kode Rak Harus di Isi Maksimal 4',
+            'kode_rak.unique' => 'Kode Rak Sudah Digunakan',
+            'nama_rak.required' => 'Nama Rak Harus di Isi',
+            'buku.required' => 'Buku Harus di Isi'
         ]);
 
         $rak = Rak::updateOrCreate(

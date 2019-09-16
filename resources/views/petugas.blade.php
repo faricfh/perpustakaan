@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-13">
             <div class="card">
                 <div class="card-header">Dashboard</div>
 
@@ -17,13 +17,13 @@
                             <thead>
                                 <tr>
                                     <th width="5%">No</th>
-                                    <th>Kode Petugas</th>
-                                    <th>Nama</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th>Jabatan</th>
-                                    <th>Telp</th>
-                                    <th width="100px">Alamat</th>
-                                    <th width="100px">Aksi</th>
+                                    <th width="100px">Kode Petugas</th>
+                                    <th width="100px">Nama</th>
+                                    <th width="50px">Jenis Kelamin</th>
+                                    <th width="100px">Jabatan</th>
+                                    <th width="100px">Telp</th>
+                                    <th>Alamat</th>
+                                    <th width="120px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,7 +85,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Telp</label>
                                             <div class="col-sm-12">
-                                                <input type="text" id="telp" name="telp" required="" placeholder="Enter Telpon" class="form-control">
+                                                <input type="text" id="telp" name="telp" required="" placeholder="Enter Telpon" class="form-control" maxlength="12">
                                             </div>
                                         </div>
 
@@ -124,6 +124,13 @@ $(function () {
         }
     });
 
+     $("#telp").on("keypress keyup blur",function (event) {
+        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
@@ -145,6 +152,7 @@ $(function () {
         $('#petugas_id').val('');
         $('#petugasForm').trigger("reset");
         $('#modelHeading').html("Create New Petugas");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
@@ -156,6 +164,7 @@ $(function () {
     $.get("{{ url('petugas') }}" +'/' + petugas_id +'/edit', function (data) {
         $('#modelHeading').html("Edit Petugas");
         $('#saveBtn').val("edit-user");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('#petugas_id').val(data.id);
         $('#kode_petugas').val(data.kode_petugas);
@@ -187,7 +196,7 @@ $(function () {
                 position : 'center',
                 type : 'success',
                 animation : 'false',
-                title : 'Berhasil di Simpan',
+                title : data.success,
                 showConfirmButton : false,
                 timer : 1000,
                 customClass : {

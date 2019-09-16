@@ -53,11 +53,20 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_buku' => 'min:4|max:10',
+            'kode_buku' => 'required|min:4|max:10|unique:bukus,kode_buku,' . $request->buku_id . ',id',
             'judul' => 'required',
             'penerbit' => 'required',
             'penulis' => 'required',
             'tahun_terbit' => 'required'
+        ], [
+            'kode_buku.required' => 'Kode Buku Harus di Isi',
+            'kode_buku.max' => 'Kode Buku Harus di Isi Maksimal 10',
+            'kode_buku.min' => 'Kode Buku Harus di Isi Maksimal 4',
+            'kode_buku.unique' => 'Kode Buku Sudah Digunakan',
+            'judul.required' => 'judul Harus di Isi',
+            'penerbit.required' => 'Judul Harus di Isi',
+            'penulis.required' => 'Penulis Harus di Isi',
+            'tahun_terbit.required' => 'Tahun Terbit Harus di Pilih'
         ]);
 
         Buku::updateOrCreate(

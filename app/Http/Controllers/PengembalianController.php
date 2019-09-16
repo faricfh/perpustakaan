@@ -50,11 +50,18 @@ class PengembalianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_kembali' => 'required|min:4|max:10',
+            'kode_kembali' => 'required|min:4|max:10|unique:pengembalians,kode_kembali,' . $request->pengembalian_id . ',id',
             'kode_pinjam' => 'required',
             'tanggal_kembali' => 'required',
+        ], [
+            'kode_kembali.required' => 'Kode Kembali Harus di Isi',
+            'kode_kembali.max' => 'Kode Kembali Harus di Isi Maksimal 10',
+            'kode_kembali.min' => 'Kode Kembali Harus di Isi Maksimal 4',
+            'kode_kembali.unique' => 'Kode Kembali Sudah Digunakan',
+            'kode_pinjam.required' => 'Kode Pinjam Harus di Pilih',
+            'tanggal_kembali.required' => 'Tanggal Kembali Harus di Isi'
         ]);
-
+        $kembali = \Carbon\Carbon::parse($request->tanggal_kembali)->format("Y-m-d");
         $tanggal_kembali = strtotime($request->tanggal_kembali);
         $jatuh_tempo = strtotime($request->jatuh_tempo);
         $jumlah = $tanggal_kembali - $jatuh_tempo;
@@ -71,7 +78,7 @@ class PengembalianController extends Controller
             [
                 'kode_kembali' => $request->kode_kembali,
                 'kode_pinjam' => $request->kode_pinjam,
-                'tanggal_kembali' => $request->tanggal_kembali,
+                'tanggal_kembali' => $kembali,
                 'jatuh_tempo' => $request->jatuh_tempo,
                 'denda_per_hari' => 2000,
                 'jumlah_hari' => $jumlah_hari,

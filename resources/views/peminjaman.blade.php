@@ -57,14 +57,14 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Tanggal Pinjam</label>
                                             <div class="col-sm-12">
-                                                <input type="date" class="form-control" id="tanggal_pinjam" name="tanggal_pinjam" placeholder="Tanggal Pinjam" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control tgl" id="tanggal_pinjam" name="tanggal_pinjam" required="">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Tanggal Kembali</label>
                                             <div class="col-sm-12">
-                                                <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" placeholder="Tanggal Kembali" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control tgl" id="tanggal_kembali" name="tanggal_kembali" required="">
                                             </div>
                                         </div>
 
@@ -72,6 +72,7 @@
                                             <div class="col-sm-12">
                                                 <label>Petugas</label>
                                                 <select name="kode_petugas" class="form-control" id="kode_petugas">
+                                                    <option selected disabled>Pilih Petugas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -80,6 +81,7 @@
                                             <div class="col-sm-12">
                                                 <label>Anggota</label>
                                                 <select name="kode_anggota" class="form-control" id="kode_anggota">
+                                                    <option selected disabled>Pilih Anggota</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -88,6 +90,7 @@
                                             <div class="col-sm-12">
                                                 <label>Buku</label>
                                                 <select name="kode_buku" class="form-control" id="kode_buku">
+                                                    <option selected disabled>Pilih Buku</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -135,9 +138,9 @@ $(function () {
             {data: 'kode_pinjam', name: 'kode_pinjam'},
             {data: 'tanggal_pinjam', name: 'tanggal_pinjam'},
             {data: 'tanggal_kembali', name: 'tanggal_kembali'},
-            {data: 'petugas.nama', name: 'kode_petugas'},
-            {data: 'anggota.nama', name: 'kode_anggota'},
-            {data: 'buku.judul', name: 'kode_buku'},
+            {data: 'nama_petugas', name: 'kode_petugas'},
+            {data: 'nama_anggota', name: 'kode_anggota'},
+            {data: 'judul', name: 'kode_buku'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -147,6 +150,7 @@ $(function () {
         $('#peminjaman_id').val('');
         $('#peminjamanForm').trigger("reset");
         $('#modelHeading').html("Buat Peminjaman");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
@@ -203,18 +207,21 @@ $(function () {
     $('body').on('click', '.editPeminjaman', function () {
         var peminjaman_id = $(this).data('id');
         $.get("{{ url('peminjaman') }}" +'/' + peminjaman_id +'/edit', function (data) {
+            $.each(data,function(key, value){
             $('#modelHeading').html("Edit Peminjaman");
             $('#saveBtn').val("edit-user");
+            $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
             $('#ajaxModel').modal('show');
             $('#peminjaman_id').val(data.id);
-            $('#kode_pinjam').val(data.kode_pinjam);
-            $('#tanggal_pinjam').val(data.tanggal_pinjam);
-            $('#tanggal_kembali').val(data.tanggal_kembali);
-            $('#kode_petugas').val(data.kode_petugas);
-            $('#kode_anggota').val(data.kode_anggota);
-            $('#kode_buku').val(data.kode_buku);
+            $('#kode_pinjam').val(value.kode_pinjam);
+            $('#tanggal_pinjam').val(value.tanggal_pinjam);
+            $('#tanggal_kembali').val(value.tanggal_kembali);
+            $('#kode_petugas').val(value.nama_petugas);
+            $('#kode_anggota').val(value.nama_anggota);
+            $('#kode_buku').val(value.judul);
             $('.alert-danger').html('');
             $('.alert-danger').css('display','none');
+            });
         })
     });
 
@@ -297,6 +304,33 @@ $(function () {
             $('.alert-danger').css('display','none');
         });
     });
+    $('#ajaxModel').on('shown.bs.modal',function(){
+        $('.tgl').datepicker({
+                zIndex: 999999,
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                changeMonth: true,
+                changeYear: true,
+        });
+
+        $(document).ready(function(){
+            $('.tgl').on("cut paste",function(e) {
+            e.preventDefault();
+            });
+        });
+
+        $('.tgl').keydown(function(e) {
+            if (e.keyCode === 8 || e.keyCode === 46) {
+            return false;
+            }
+        });
+
+        $('.tgl').keypress(function(e) {
+            return false
+        });
+    });
 });
+
+ 
 </script>
 @endsection

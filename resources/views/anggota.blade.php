@@ -22,9 +22,9 @@
                                     <th>Kode Anggota</th>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
-                                    <th>Jurusan</th>
+                                    <th width="280px">Jurusan</th>
                                     <th width="280px">Alamat</th>
-                                    <th width="100px">Aksi</th>
+                                    <th width="150px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,15 +77,12 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">Jurusan</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="jurusan" name="jurusan" placeholder="Enter Jurusan" value="" maxlength="50" required="">
-                                                {{-- <select>
-                                                    <option>Pilih Jurusan</option>
-                                                    <option name="" id="" value="">Rekayasa Perangkat Lunak</option>
-                                                    <option name="" id="" value="">Teknik Komputer Jaringan</option>
-                                                    <option name="" id="" value="">Tata Boga</option>
-                                                    <option name="" id="" value="">Multimedia</option>
-                                                    <option name="" id="" value="">Audio Vidio</option>
-                                                </select> --}}
+                                                <select class="form-control" name="jurusan" id="jurusan">
+                                                    <option selected disabled>Pilih Jurusan</option>
+                                                    <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                                                    <option value="Teknik Kendaraan Ringan">Teknik Kendaraan Ringan</option>
+                                                    <option value="Teknik Sepeda Motor">Teknik Sepeda Motor</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -144,6 +141,7 @@ $(function () {
         $('#anggota_id').val('');
         $('#anggotaForm').trigger("reset");
         $('#modelHeading').html("Buat Anggota");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
@@ -154,6 +152,7 @@ $(function () {
     $.get("{{ url('anggota') }}" +'/' + anggota_id +'/edit', function (data) {
         $('#modelHeading').html("Edit Anggota");
         $('#saveBtn').val("edit-user");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('#anggota_id').val(data.id);
         $('#kode_anggota').val(data.kode_anggota);

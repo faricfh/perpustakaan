@@ -57,7 +57,7 @@
                                 <label for="name" class="col-sm-2 control-label">Kode Pinjam</label>
                                 <div class="col-sm-12">
                                     <select name="kode_pinjam" class="form-control" id="kode_pinjam">
-                                        <option value="">Pilih Kode Pinjam</option>
+                                        <option selected disabled>Pilih Kode Pinjam</option>
                                     </select>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <label for="name" class="col-sm-2 control-label">Tanggal Kembali</label>
                                 <div class="col-sm-12">
-                                    <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" placeholder="Tanggal Kembali" value="" maxlength="50" required="">
+                                    <input type="text" class="form-control tgl" id="tanggal_kembali" name="tanggal_kembali" required="">
                                 </div>
                             </div>
 
@@ -122,6 +122,32 @@
     $(document).ready(function() {
         $("#e1").select2();
     });
+
+    $('#ajaxModel').on('shown.bs.modal',function(){
+        $('.tgl').datepicker({
+                zIndex: 999999,
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                changeMonth: true,
+                changeYear: true,
+        });
+
+        $(document).ready(function(){
+            $('.tgl').on("cut paste",function(e) {
+            e.preventDefault();
+            });
+        });
+
+        $('.tgl').keydown(function(e) {
+            if (e.keyCode === 8 || e.keyCode === 46) {
+            return false;
+            }
+        });
+
+        $('.tgl').keypress(function(e) {
+            return false
+        });
+    });
 </script>
 <script type="text/javascript">
 $(function () {
@@ -157,9 +183,11 @@ $(function () {
         $('#pengembalian_id').val('');
         $('#pengembalianForm').trigger("reset");
         $('#modelHeading').html("Buat Pengembalian");
+        $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
+        
     });
 
      $.ajax({
@@ -231,6 +259,7 @@ $(function () {
         $.get("{{ url('pengembalian') }}" +'/' + pengembalian_id +'/edit', function (data) {
             $('#modelHeading').html("Edit Pengembalian");
             $('#saveBtn').val("edit-user");
+            $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
             $('#ajaxModel').modal('show');
             $('#pengembalian_id').val(data.kem.id);
             $('#kode_kembali').val(data.kem.kode_kembali);
