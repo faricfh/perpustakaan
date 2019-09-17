@@ -1,109 +1,111 @@
-@extends('layouts.app')
+@extends('layouts.backend')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-13">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+<div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Perpustakaan
+      </h1>
+    </section>
 
-                <div class="card-body">
-                    <div class="container">
-                        <h1>Perpustakaan - Petugas</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewPetugas"> Buat Petugas</a>
-                        <br>
-                        <br>
-                        <table class="table table-bordered data-table">
-                            <thead>
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th width="100px">Kode Petugas</th>
-                                    <th width="100px">Nama</th>
-                                    <th width="50px">Jenis Kelamin</th>
-                                    <th width="100px">Jabatan</th>
-                                    <th width="100px">Telp</th>
-                                    <th>Alamat</th>
-                                    <th width="120px">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+            <h3 class="box-title">Petugas</h3>
+            </div>
+            <div class="box-body">
+                    <a class="btn btn-success" href="javascript:void(0)" id="createNewPetugas"> Buat Petugas</a>
+                    <br>
+                    <br>
+                    <table class="table table-bordered data-table">
+                        <thead>
+                            <tr>
+                                <th width="5%">No</th>
+                                <th width="80px">Kode Petugas</th>
+                                <th width="100px">Nama</th>
+                                <th width="50px">Jenis Kelamin</th>
+                                <th width="100px">Jabatan</th>
+                                <th width="100px">Telp</th>
+                                <th>Alamat</th>
+                                <th width="90px">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                            </tbody>
+                        </tbody>
 
-                        </table>
-                    </div>
-                    <div class="modal fade" id="ajaxModel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="modelHeading"></h4>
-                                </div>
+                    </table>
+                <div class="modal" id="ajaxModel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelHeading"></h4>
+                            </div>
 
-                                <div class="modal-body">
+                            <div class="modal-body">
                                 <div class="alert alert-danger" style="display:none"></div>
                                 <div id="result"></div>
-                                    <form id="petugasForm" name="petugasForm" class="form-horizontal">
-                                    <input type="hidden" name="petugas_id" id="petugas_id">
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Kode Petugas</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_petugas" name="kode_petugas" placeholder="Enter Kode Petugas" value="" maxlength="50" required>
+                                <form id="petugasForm" name="petugasForm" class="form-horizontal">
+                                <input type="hidden" name="petugas_id" id="petugas_id">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Kode Petugas</label>
+                                            <input type="text" class="form-control" id="kode_petugas" name="kode_petugas" placeholder="Masukan Kode Petugas" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Nama</label>
+                                            <input type="text" id="nama" name="nama" placeholder="Masukan Nama" class="form-control" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Jenis Kelamin</label>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input jk" type="radio" id="customRadio1" value="Laki-laki" name="jk">
+                                                <label for="customRadio1" class="custom-control-label">Laki-laki</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input jk" type="radio" id="customRadio2" value="Perempuan" name="jk">
+                                                <label for="customRadio2" class="custom-control-label">Perempuan</label>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Nama</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" id="nama" name="nama" placeholder="Enter Nama" class="form-control" required>
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Jabatan</label>
+                                            <input type="text" id="jabatan" name="jabatan" required="" placeholder="Masukan Jabatan" class="form-control">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Jenis Kelamin</label>
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input jk" type="radio" id="customRadio1" value="Laki-laki" name="jk">
-                                                        <label for="customRadio1" class="custom-control-label">Laki-laki</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input jk" type="radio" id="customRadio2" value="Perempuan" name="jk">
-                                                        <label for="customRadio2" class="custom-control-label">Perempuan</label>
-                                                    </div>
-                                                </div>
-                                            </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Telp</label>
+                                            <input type="text" id="telp" name="telp" required="" placeholder="Masukan Telpon" class="form-control" maxlength="12">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Jabatan</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" id="jabatan" name="jabatan" required="" placeholder="Enter Jabatan" class="form-control">
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Alamat</label>
+                                            <textarea name="alamat" id="alamat" cols="60" rows="5" class="form-control" placeholder="Masukan Alamat"></textarea>
                                         </div>
+                                    </div>
+                                </form>
+                            </div>
 
+                            <div class="modal-footer">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
+                                    </button>
 
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Telp</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" id="telp" name="telp" required="" placeholder="Enter Telpon" class="form-control" maxlength="12">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Alamat</label>
-                                            <div class="col-sm-12">
-                                                <textarea name="alamat" id="alamat" cols="60" rows="5" class="form-control" placeholder="Enter Alamat"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
-                                            </button>
-
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -111,8 +113,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
 @endsection
 @section('js')
 <script type="text/javascript">
@@ -151,7 +154,7 @@ $(function () {
         $('#saveBtn').val("create-petugas");
         $('#petugas_id').val('');
         $('#petugasForm').trigger("reset");
-        $('#modelHeading').html("Create New Petugas");
+        $('#modelHeading').html("Buat Petugas");
         $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
@@ -187,34 +190,32 @@ $(function () {
         $(this).html('Simpan');
 
         $.ajax({
-        data: $('#petugasForm').serialize(),
-        url: "{{ url('petugas-store') }}",
-        type: "POST",
-        dataType: 'json',
-        success: function (data) {
-            Swal.fire({
-                position : 'center',
-                type : 'success',
-                animation : 'false',
-                title : data.success,
-                showConfirmButton : false,
-                timer : 1000,
-                customClass : {
-                    popup : 'animated bounceOut'
-                }
-            })
-            $('#petugasForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-            table.draw();
-        },
-        error: function (request, status, error) {
+            data: $('#petugasForm').serialize(),
+            url: "{{ url('petugas-store') }}",
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                $('#petugasForm').trigger("reset");
+                $('#ajaxModel').modal('hide');
+                table.draw();
+                Swal.fire({
+                    position : 'center',
+                    type : 'success',
+                    animation : 'false',
+                    title : data.success,
+                    showConfirmButton : false,
+                    timer : 1000,
+                    customClass : {
+                        popup : 'animated bounceOut'
+                    }
+                });
+            },error: function (request, status, error) {
                 $('.alert-danger').html('');
                 json = $.parseJSON(request.responseText);
                 $.each(json.errors, function(key, value){
                     $('.alert-danger').show();
                     $('.alert-danger').append('<p>'+value+'</p>');
                 });
-
             }
         });
     });

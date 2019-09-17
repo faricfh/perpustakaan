@@ -1,78 +1,81 @@
-@extends('layouts.app')
+@extends('layouts.backend')
 @section('css')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
 @endsection
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+<div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Perpustakaan
+      </h1>
+    </section>
 
-                <div class="card-body">
-                    <div class="container">
-                        <br>
-                        <h1>Perpustakaan - Rak</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewRak"> Buat Rak</a>
-                        <br>
-                        <br/>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+            <h3 class="box-title">Rak</h3>
+            </div>
+            <div class="box-body">
+                <a class="btn btn-success" href="javascript:void(0)" id="createNewRak"> Buat Rak</a>
+                <br>
+                <br/>
 
-                        <table class="table table-bordered data-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th width="230px">Kode Rak</th>
-                                    <th width="230px">Nama Rak</th>
-                                    <th width="230px">Buku</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                <table class="table table-bordered data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th width="230px">Kode Rak</th>
+                            <th width="230px">Nama Rak</th>
+                            <th width="230px">Buku</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
 
-                    <div class="modal fade" id="ajaxModel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="modelHeading"></h4>
-                                </div>
+                <div class="modal" id="ajaxModel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelHeading"></h4>
+                            </div>
 
-                                <div class="modal-body">
-                                    <div class="alert alert-danger" style="display:none"></div>
-                                    <form id="rakForm" name="rakForm" class="form-horizontal" >
-                                    <input type="hidden" name="rak_id" id="rak_id">
+                            <div class="modal-body">
+                                <div class="alert alert-danger" style="display:none"></div>
+                                <form id="rakForm" name="rakForm" class="form-horizontal" >
+                                <input type="hidden" name="rak_id" id="rak_id">
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Kode Rak</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_rak" name="kode_rak" placeholder="Enter Kode Rak" value="" maxlength="50" required="">
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Kode Rak</label>
+                                            <input type="text" class="form-control" id="kode_rak" name="kode_rak" placeholder="Masukan Kode Rak" required="">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Nama Rak</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="nama_rak" name="nama_rak" placeholder="Enter Nama Rak" value="" maxlength="50" required="">
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Nama Rak</label>
+                                            <input type="text" class="form-control" id="nama_rak" name="nama_rak" placeholder="Masukan Nama Rak" required="">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <label>Buku</label>
-                                                <select name="buku[]" class="buku" id="buku" style="width:100%" multiple="multiple"></select>
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Buku</label>
+                                            <select name="buku[]" class="buku" id="buku" style="width:100%" multiple="multiple"></select>
                                         </div>
+                                    </div>
+                                </form>
+                            </div>
 
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
-                                            </button>
+                            <div class="modal-footer">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
+                                    </button>
 
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -80,8 +83,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
 @endsection
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
@@ -181,21 +185,20 @@ $(function () {
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                Swal.fire({
-                position : 'center',
-                type : 'success',
-                animation : 'false',
-                title : 'Berhasil di Simpan',
-                showConfirmButton : false,
-                timer : 1000,
-                customClass : {
-                    popup : 'animated bounceOut'
-                }
-            })
                 $('#rakForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
-
+                Swal.fire({
+                    position : 'center',
+                    type : 'success',
+                    animation : 'false',
+                    title : 'Berhasil di Simpan',
+                    showConfirmButton : false,
+                    timer : 1000,
+                    customClass : {
+                        popup : 'animated bounceOut'
+                    }
+                });
             },
             error: function (request, status, error) {
                 $('.alert-danger').html('');

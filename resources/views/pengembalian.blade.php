@@ -1,152 +1,134 @@
-@extends('layouts.app')
-@section('css')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
-@endsection
+@extends('layouts.backend')
+
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="container">
-            <br>
-            <h1>Perpustakaan - Pengembalian</h1>
-            <a class="btn btn-success" href="javascript:void(0)" id="createNewPengembalian">Buat Pengembalian</a>
-            <br>
-            <br/>
+<div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Perpustakaan
+      </h1>
+    </section>
 
-            <table class="table table-bordered data-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kode Kembali</th>
-                        <th>Kode Pinjam</th>
-                        <th>Tanggal Kembali</th>
-                        <th>Jatuh Tempo</th>
-                        <th>Denda Per Hari</th>
-                        <th>Jumlah Hari</th>
-                        <th>Total Denda</th>
-                        <th>Petugas</th>
-                        <th>Anggota</th>
-                        <th>Buku</th>
-                        <th width="100px">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+            <h3 class="box-title">Pengembalian</h3>
+            </div>
+            <div class="box-body">
+                <a class="btn btn-success" href="javascript:void(0)" id="createNewPengembalian">Buat Pengembalian</a>
+                <br>
+                <br/>
 
-        <div class="modal fade" id="ajaxModel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modelHeading"></h4>
-                    </div>
+                <table class="table table-bordered data-table" style="width:100% important!">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode Kembali</th>
+                            <th>Kode Pinjam</th>
+                            <th>Tanggal Kembali</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Jumlah Hari</th>
+                            <th>Total Denda</th>
+                            <th>Petugas</th>
+                            <th>Anggota</th>
+                            <th>Buku</th>
+                            <th width="100px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
 
-                    <div class="modal-body">
-                        <div class="alert alert-danger" style="display:none"></div>
-                        <form id="pengembalianForm" name="pengembalianForm" class="form-horizontal" >
-                        <input type="hidden" name="pengembalian_id" id="pengembalian_id">
+                <div class="modal" id="ajaxModel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelHeading"></h4>
+                            </div>
 
-                            <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Kode Kembali</label>
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="kode_kembali" name="kode_kembali" placeholder="Kode Kembali" value="" maxlength="50" required="">
+                            <div class="modal-body">
+                                <div class="alert alert-danger" style="display:none"></div>
+                                <form id="pengembalianForm" name="pengembalianForm" class="form-horizontal" >
+                                <input type="hidden" name="pengembalian_id" id="pengembalian_id">
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Kode Kembali</label>
+                                            <input type="text" class="form-control" id="kode_kembali" name="kode_kembali" placeholder="Kode Kembali" required="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Kode Pinjam</label>
+                                            <select name="kode_pinjam" class="form-control" id="kode_pinjam">
+                                                <option selected disabled>Pilih Kode Pinjam</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Tanggal Kembali</label>
+                                            <input type="text" class="form-control datepicker" id="tanggal_kembali" name="tanggal_kembali" required="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Jatuh Tempo</label>
+                                            <input type="hidden" name="jatuh_tempo" class="jatuh_tempo" value="">
+                                            <input type="text" class="form-control datepicker" nama="jatuh_tempo" id="jatuh_tempo" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Petugas</label>
+                                            <input type="hidden" name="kode_petugas" class="kode_petugas" value="">
+                                            <input type="text" class="form-control" id="kode_petugas" placeholder="Nama Petugas" value="" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Anggota</label>
+                                            <input type="hidden" name="kode_anggota" class="kode_anggota" value="">
+                                            <input type="text" class="form-control" id="kode_anggota" placeholder="Nama Anggota" value="" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Buku</label>
+                                            <input type="hidden" name="kode_buku" class="kode_buku" value="">
+                                            <input type="text" class="form-control" id="kode_buku" placeholder="Nama Buku" value="" disabled>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
+                                    </button>
+
+                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Kode Pinjam</label>
-                                <div class="col-sm-12">
-                                    <select name="kode_pinjam" class="form-control" id="kode_pinjam">
-                                        <option selected disabled>Pilih Kode Pinjam</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Tanggal Kembali</label>
-                                <div class="col-sm-12">
-                                    <input type="text" class="form-control tgl" id="tanggal_kembali" name="tanggal_kembali" required="">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Jatuh Tempo</label>
-                                <div class="col-sm-12">
-                                    <input type="hidden" name="jatuh_tempo" class="jatuh_tempo" value="">
-                                    <input type="date" class="form-control" id="jatuh_tempo" placeholder="Jatuh Tempo" value="" disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label>Petugas</label>
-                                    <input type="hidden" name="kode_petugas" class="kode_petugas" value="">
-                                    <input type="text" class="form-control" id="kode_petugas" placeholder="Nama Petugas" value="" disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label>Anggota</label>
-                                    <input type="hidden" name="kode_anggota" class="kode_anggota" value="">
-                                    <input type="text" class="form-control" id="kode_anggota" placeholder="Nama Anggota" value="" disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label>Buku</label>
-                                    <input type="hidden" name="kode_buku" class="kode_buku" value="">
-                                    <input type="text" class="form-control" id="kode_buku" placeholder="Nama Buku" value="" disabled>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
-                                </button>
-
-                                <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
 @endsection
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
         $("#e1").select2();
-    });
-
-    $('#ajaxModel').on('shown.bs.modal',function(){
-        $('.tgl').datepicker({
-                zIndex: 999999,
-                format: 'dd-mm-yyyy',
-                autoclose: true,
-                changeMonth: true,
-                changeYear: true,
-        });
-
-        $(document).ready(function(){
-            $('.tgl').on("cut paste",function(e) {
-            e.preventDefault();
-            });
-        });
-
-        $('.tgl').keydown(function(e) {
-            if (e.keyCode === 8 || e.keyCode === 46) {
-            return false;
-            }
-        });
-
-        $('.tgl').keypress(function(e) {
-            return false
-        });
     });
 </script>
 <script type="text/javascript">
@@ -165,15 +147,14 @@ $(function () {
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'kode_kembali', name: 'kode_kembali'},
-            {data: 'peminjaman.kode_pinjam', name: 'kode_pinjam'},
+            {data: 'kode_pinjam', name: 'kode_pinjam'},
             {data: 'tanggal_kembali', name: 'tanggal_kembali'},
             {data: 'jatuh_tempo', name: 'jatuh_tempo'},
-            {data: 'denda_per_hari', name: 'denda_per_hari'},
             {data: 'jumlah_hari', name: 'jumlah_hari'},
             {data: 'total_denda', name: 'total_denda'},
-            {data: 'petugas.nama', name: 'kode_petugas'},
-            {data: 'anggota.nama', name: 'kode_anggota'},
-            {data: 'buku.judul', name: 'kode_buku'},
+            {data: 'nama_petugas', name: 'kode_petugas'},
+            {data: 'nama_anggota', name: 'kode_anggota'},
+            {data: 'judul', name: 'kode_buku'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -187,7 +168,7 @@ $(function () {
         $('#ajaxModel').modal('show');
         $('.alert-danger').html('');
         $('.alert-danger').css('display','none');
-        
+
     });
 
      $.ajax({
@@ -264,13 +245,17 @@ $(function () {
             $('#pengembalian_id').val(data.kem.id);
             $('#kode_kembali').val(data.kem.kode_kembali);
             $('#kode_pinjam').val(data.kem.kode_pinjam);
-            $('#jatuh_tempo').val(data.kem.jatuh_tempo);
-            $('#tanggal_kembali').val(data.kem.tanggal_kembali);
+            $('.jatuh_tempo').val(data.kem.jatuh_tempo);
             $.each(data.dit, function(key, value){
                 console.log(data.dit);
+                $('#tanggal_kembali').val(value.tanggal_kembali);
+                $('#jatuh_tempo').val(value.jatuh_tempo);
                 $('#kode_anggota').val(value.nama_anggota);
                 $('#kode_petugas').val(value.nama_petugas);
                 $('#kode_buku').val(value.judul);
+                $('.kode_anggota').val(value.id_anggota);
+                $('.kode_petugas').val(value.id_petugas);
+                $('.kode_buku').val(value.id_buku);
             });
             $('.alert-danger').html('');
             $('.alert-danger').css('display','none');
@@ -286,6 +271,9 @@ $(function () {
             type: "POST",
             dataType: 'json',
             success: function (data) {
+                $('#pengembalianForm').trigger("reset");
+                $('#ajaxModel').modal('hide');
+                table.draw();
                 Swal.fire({
                     position : 'center',
                     type : 'success',
@@ -296,11 +284,7 @@ $(function () {
                     customClass : {
                         popup : 'animated bounceOut'
                     }
-                })
-                $('#pengembalianForm').trigger("reset");
-                $('#ajaxModel').modal('hide');
-                table.draw();
-
+                });
             },
             error: function (request, status, error) {
                 $('.alert-danger').html('');
@@ -365,17 +349,23 @@ $(function () {
             dataType : 'json',
             success : function (berhasil) {
                 $.each(berhasil, function(key, value){
+                    console.log(value);
                     $('#kode_anggota').val(value.nama_anggota);
                     $('#kode_petugas').val(value.nama_petugas);
                     $('#kode_buku').val(value.judul);
-                    $('#jatuh_tempo').val(value.tanggal_kembali);
-                    $('.jatuh_tempo').val(value.tanggal_kembali);
+                    $('#jatuh_tempo').val(value.jatuh_tempo);
+                    $('.jatuh_tempo').val(value.jatuh_tempo);
                     $('.kode_buku').val(value.id_judul);
                     $('.kode_anggota').val(value.id_anggota);
                     $('.kode_petugas').val(value.id_petugas);
                 });
             },
         });
+    });
+
+    $('.datepicker').datepicker({
+        format: 'dd-mm-yyyy',
+        autoclose: true,
     });
 });
 </script>

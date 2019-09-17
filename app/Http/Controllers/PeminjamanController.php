@@ -27,7 +27,7 @@ class PeminjamanController extends Controller
                 ->addColumn('action', function ($row) {
                     $pengembalian = \DB::select('SELECT id FROM pengembalians WHERE kode_pinjam = ' . $row->id . '');
                     if ($pengembalian) {
-                        $span = '<span class="bg-warning">Dikembalikan</span>';
+                        $span = '<span class="label label-warning">Dikembalikan</span>';
                         return $span;
                     } else {
                         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editPeminjaman">Edit</a>';
@@ -113,11 +113,11 @@ class PeminjamanController extends Controller
      */
     public function edit($id)
     {
-        $peminjaman = \DB::select('SELECT peminjamen.id,kode_pinjam,date_format(tanggal_pinjam,"%d-%m-%Y") AS tanggal_pinjam, date_format(tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,pet.nama AS nama_petugas, ang.nama AS nama_anggota,buk.judul
+        $peminjaman = \DB::select('SELECT peminjamen.id,kode_pinjam,date_format(tanggal_pinjam,"%d-%m-%Y") AS tanggal_pinjam, date_format(tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,pet.id AS id_petugas, ang.id AS id_anggota,buk.id AS id_buku
                                 FROM peminjamen
                                 LEFT JOIN petugas AS pet ON pet.id = peminjamen.kode_petugas
                                 LEFT JOIN anggotas AS ang ON ang.id = peminjamen.kode_anggota
-                                LEFT JOIN bukus AS buk ON buk.id = peminjamen.kode_buku 
+                                LEFT JOIN bukus AS buk ON buk.id = peminjamen.kode_buku
                                 WHERE peminjamen.id = ' . $id . '');
         return response()->json($peminjaman);
     }

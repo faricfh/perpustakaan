@@ -1,98 +1,101 @@
-@extends('layouts.app')
+@extends('layouts.backend')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-                <div class="card-body">
-                    <div class="container">
-                        <br>
-                        <h1 align="center">Perpustakaan - Buku</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewBuku">Buat Buku</a>
-                        <br>
-                        <br/>
-                        <table class="table table-bordered data-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th width="100px">Kode Buku</th>
-                                    <th widh="280px">Judul</th>
-                                    <th>Penulis</th>
-                                    <th widh="280px">Penerbit</th>
-                                    <th widh="50px">Tahun Terbit</th>
-                                    <th widh="100px">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+<div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Perpustakaan
+      </h1>
+    </section>
 
-                            </tbody>
-                        </table>
-                    </div>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+            <h3 class="box-title">Buku</h3>
+            </div>
+            <div class="box-body">
+                <a class="btn btn-success" href="javascript:void(0)" id="createNewBuku">Buat Buku</a>
+                <br>
+                <br/>
+                <table class="table table-bordered data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th width="100px">Kode Buku</th>
+                            <th widh="280px">Judul</th>
+                            <th>Penulis</th>
+                            <th widh="280px">Penerbit</th>
+                            <th widh="50px">Tahun Terbit</th>
+                            <th widh="100px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <div class="modal fade" id="ajaxModel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="modelHeading"></h4>
-                                </div>
+                    </tbody>
+                </table>
 
-                                <div class="modal-body">
-                                    <div class="alert alert-danger" style="display:none"></div>
-                                    <form id="bukuForm" name="bukuForm" class="form-horizontal">
-                                    <input type="hidden" name="buku_id" id="buku_id">
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Kode Buku</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_buku" name="kode_buku" placeholder="Kode Buku" value="" maxlength="50" required="">
-                                            </div>
+                <div class="modal" id="ajaxModel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelHeading"></h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="alert alert-danger" style="display:none"></div>
+                                <form id="bukuForm" name="bukuForm" class="form-horizontal">
+                                <input type="hidden" name="buku_id" id="buku_id">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Kode Buku</label>
+                                            <input type="text" class="form-control" id="kode_buku" name="kode_buku" placeholder="Masukan Kode Buku" required="">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Judul</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control @error('judul') is-invalid @enderror" id="judul" name="judul" placeholder="Judul" value="" maxlength="50" required="">
-
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Judul</label>
+                                            <input type="text" class="form-control" id="judul" name="judul" placeholder="Masukan Judul" required="">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Penulis</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" value="" maxlength="50" required="">
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Penulis</label>
+                                            <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Masukan Penulis" required="">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Penerbit</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Penerbit" value="" maxlength="50" required="">
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Penerbit</label>
+                                            <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Masukan Penerbit" required="">
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Tahun Terbit</label>
-                                             <div class="col-sm-12">
-                                                <select name="tahun_terbit" class="form-control" id="tahun_terbit">
-                                                     <option selected disabled>Pilih Tahun Terbit</option>
-                                                     <?php
-                                                        for ($x = 1900; $x <= 2020; $x++): ?>
-                                                            <option value="<?=$x;?>"><?=$x;?></option><?php
-                                                        endfor;
-                                                        ?>
-                                                </select>
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Tahun Terbit</label>
+                                            <select name="tahun_terbit" class="form-control" id="tahun_terbit">
+                                                <option selected disabled>Pilih Tahun Terbit</option>
+                                                <?php
+                                                    for ($x = 1900; $x <= 2020; $x++): ?>
+                                                        <option value="<?=$x;?>"><?=$x;?></option><?php
+                                                    endfor;
+                                                    ?>
+                                            </select>
                                         </div>
+                                    </div>
+                                </form>
+                            </div>
 
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
-                                            </button>
+                            <div class="modal-footer">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
+                                    </button>
 
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -100,8 +103,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
 @endsection
 @section('js')
  <script type="text/javascript">
@@ -166,6 +170,9 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
+            $('#bukuForm').trigger("reset");
+            $('#ajaxModel').modal('hide');
+            table.draw();
             Swal.fire({
                 position : 'center',
                 type : 'success',
@@ -176,11 +183,7 @@ $(function () {
                 customClass : {
                     popup : 'animated bounceOut'
                 }
-            })
-            $('#bukuForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-            table.draw();
-
+            });
         },
         error: function (request, status, error) {
                 $('.alert-danger').html('');

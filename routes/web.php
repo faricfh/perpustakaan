@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('layouts.index');
 });
 
 Route::get('/peminjaman', 'PeminjamanController@index');

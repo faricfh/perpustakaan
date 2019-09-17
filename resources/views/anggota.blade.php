@@ -1,106 +1,106 @@
-@extends('layouts.app')
+@extends('layouts.backend')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+<div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Perpustakaan
+      </h1>
+    </section>
 
-                <div class="card-body">
-                    <div class="container">
-                        <br>
-                        <h1>Perpustakaan - Anggota</h1>
-                        <a class="btn btn-success" href="javascript:void(0)" id="createNewAnggota"> Buat Anggota</a>
-                        <br>
-                        <br/>
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+            <h3 class="box-title">Anggota</h3>
+            </div>
+            <div class="box-body">
+                <a class="btn btn-success" href="javascript:void(0)" id="createNewAnggota"> Buat Anggota</a>
+                <br>
+                <br/>
 
-                        <table class="table table-bordered data-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kode Anggota</th>
-                                    <th>Nama</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th width="280px">Jurusan</th>
-                                    <th width="280px">Alamat</th>
-                                    <th width="150px">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                <table class="table table-bordered data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode Anggota</th>
+                            <th>Nama</th>
+                            <th>Jenis Kelamin</th>
+                            <th width="150px">Jurusan</th>
+                            <th width="280px">Alamat</th>
+                            <th width="90px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
 
-                    <div class="modal fade" id="ajaxModel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="modelHeading"></h4>
-                                </div>
+                <div class="modal" id="ajaxModel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelHeading"></h4>
+                            </div>
 
-                                <div class="modal-body">
-                                    <div class="alert alert-danger" style="display:none"></div>
-                                    <form id="anggotaForm" name="anggotaForm" class="form-horizontal" >
-                                    <input type="hidden" name="anggota_id" id="anggota_id">
+                            <div class="modal-body">
+                                <div class="alert alert-danger" style="display:none"></div>
+                                <form id="anggotaForm" name="anggotaForm" class="form-horizontal" >
+                                <input type="hidden" name="anggota_id" id="anggota_id">
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Kode Anggota</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="kode_anggota" name="kode_anggota" placeholder="Enter Kode Anggota" value="" maxlength="50" required="">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Kode Anggota</label>
+                                            <input type="text" class="form-control" id="kode_anggota" name="kode_anggota" placeholder="Masukan Kode Anggota" required="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Nama</label>
+                                            <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukan Nama" required="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Jenis Kelamin</label>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input jk" type="radio" id="customRadio1" value="Laki-laki" name="jk">
+                                                <label for="customRadio1" class="custom-control-label">Laki-laki</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input jk" type="radio" id="customRadio2" value="Perempuan" name="jk">
+                                                <label for="customRadio2" class="custom-control-label">Perempuan</label>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Nama</label>
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Enter Nama" value="" maxlength="50" required="">
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Jurusan</label>
+                                            <select class="form-control" name="jurusan" id="jurusan">
+                                                <option selected disabled>Pilih Jurusan</option>
+                                                <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                                                <option value="Teknik Kendaraan Ringan">Teknik Kendaraan Ringan</option>
+                                                <option value="Teknik Sepeda Motor">Teknik Sepeda Motor</option>
+                                            </select>
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Jenis Kelamin</label>
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input jk" type="radio" id="customRadio1" value="Laki-laki" name="jk">
-                                                        <label for="customRadio1" class="custom-control-label">Laki-laki</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio">
-                                                        <input class="custom-control-input jk" type="radio" id="customRadio2" value="Perempuan" name="jk">
-                                                        <label for="customRadio2" class="custom-control-label">Perempuan</label>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <label>Alamat</label>
+                                            <textarea name="alamat" id="alamat" cols="60" rows="5" class="form-control" placeholder="Masukan Alamat"></textarea>
                                         </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
+                                    </button>
 
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Jurusan</label>
-                                            <div class="col-sm-12">
-                                                <select class="form-control" name="jurusan" id="jurusan">
-                                                    <option selected disabled>Pilih Jurusan</option>
-                                                    <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
-                                                    <option value="Teknik Kendaraan Ringan">Teknik Kendaraan Ringan</option>
-                                                    <option value="Teknik Sepeda Motor">Teknik Sepeda Motor</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="name" class="col-sm-2 control-label">Alamat</label>
-                                            <div class="col-sm-12">
-                                                <textarea name="alamat" id="alamat" cols="60" rows="5" class="form-control" placeholder="Enter Alamat"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
-                                            </button>
-
-                                            <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -108,8 +108,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
 @endsection
 @section('js')
 <script type="text/javascript">
@@ -179,6 +180,9 @@ $(function () {
         type: "POST",
         dataType: 'json',
         success: function (data) {
+            $('#anggotaForm').trigger("reset");
+            $('#ajaxModel').modal('hide');
+            table.draw();
             Swal.fire({
                 position : 'center',
                 type : 'success',
@@ -189,11 +193,7 @@ $(function () {
                 customClass : {
                     popup : 'animated bounceOut'
                 }
-            })
-            $('#anggotaForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-            table.draw();
-
+            });
         },
         error: function (request, status, error) {
                 $('.alert-danger').html('');

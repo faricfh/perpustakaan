@@ -17,7 +17,15 @@ class PengembalianController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Pengembalian::with('buku', 'petugas', 'anggota', 'peminjaman')->get();
+            $data = \DB::select('SELECT p.id,p.kode_kembali, DATE_FORMAT(p.tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,
+                                DATE_FORMAT(p.jatuh_tempo,"%d-%m-%Y") AS jatuh_tempo,pet.nama AS nama_petugas,
+                                ang.nama AS nama_anggota,buk.judul,pen.kode_pinjam,p.jumlah_hari,p.total_denda
+                                FROM pengembalians AS p
+                                LEFT JOIN petugas AS pet ON pet.id = p.kode_petugas
+                                LEFT JOIN anggotas AS ang ON ang.id = p.kode_anggota
+                                LEFT JOIN bukus AS buk ON buk.id = p.kode_buku
+                                LEFT JOIN peminjamen AS pen ON pen.id = p.kode_pinjam
+                                ');
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -62,6 +70,7 @@ class PengembalianController extends Controller
             'tanggal_kembali.required' => 'Tanggal Kembali Harus di Isi'
         ]);
         $kembali = \Carbon\Carbon::parse($request->tanggal_kembali)->format("Y-m-d");
+        $jatuh = \Carbon\Carbon::parse($request->jatuh_tempo)->format("Y-m-d");
         $tanggal_kembali = strtotime($request->tanggal_kembali);
         $jatuh_tempo = strtotime($request->jatuh_tempo);
         $jumlah = $tanggal_kembali - $jatuh_tempo;
@@ -79,7 +88,7 @@ class PengembalianController extends Controller
                 'kode_kembali' => $request->kode_kembali,
                 'kode_pinjam' => $request->kode_pinjam,
                 'tanggal_kembali' => $kembali,
-                'jatuh_tempo' => $request->jatuh_tempo,
+                'jatuh_tempo' => $jatuh,
                 'denda_per_hari' => 2000,
                 'jumlah_hari' => $jumlah_hari,
                 'total_denda' => $total_denda,
@@ -112,7 +121,9 @@ class PengembalianController extends Controller
     {
         $pengembalian = Pengembalian::find($id);
 
-        $edit = \DB::select('SELECT pg.id, a.nama AS nama_anggota, p.nama AS nama_petugas, bk.judul, pm.kode_pinjam
+        $edit = \DB::select('SELECT pg.id, a.nama AS nama_anggota, p.nama AS nama_petugas, bk.judul, pm.kode_pinjam,p.id AS id_petugas,a.id AS id_anggota,bk.id AS id_buku,
+                                DATE_FORMAT(pg.tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,
+                                DATE_FORMAT(pm.tanggal_kembali,"%d-%m-%Y") AS jatuh_tempo
                                 FROM pengembalians AS pg
                                 LEFT JOIN petugas AS p ON p.id = pg.kode_petugas
                                 LEFT JOIN anggotas AS a ON a.id = pg.kode_anggota
@@ -151,7 +162,7 @@ class PengembalianController extends Controller
 
     public function db($id)
     {
-        $pengembalian = \DB::select('SELECT a.id,a.tanggal_kembali,b.nama AS nama_anggota,c.nama AS nama_petugas, d.judul,b.id AS id_anggota,c.id AS id_petugas,d.id AS id_judul
+        $pengembalian = \DB::select('SELECT a.id,DATE_FORMAT(a.tanggal_kembali,"%d-%m-%Y") AS jatuh_tempo,b.nama AS nama_anggota,c.nama AS nama_petugas, d.judul,b.id AS id_anggota,c.id AS id_petugas,d.id AS id_judul
                                     FROM peminjamen AS a
                                     LEFT JOIN anggotas AS b ON b.id = a.kode_anggota
                                     LEFT JOIN petugas AS c ON c.id = a.kode_petugas

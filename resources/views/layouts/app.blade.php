@@ -20,7 +20,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     {{-- datepicker --}}
-    <link rel="stylesheet" href="{{ asset('css/datepicker.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/datepicker.css') }}"> --}}
 
     {{-- bootsraps --}}
 
@@ -122,7 +122,10 @@
             @yield('content')
         </main>
     </div>
-    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+    {{-- <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script> --}}
+        {{-- <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> --}}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
     @yield('js')
 </body>
 </html>
