@@ -14,28 +14,28 @@
             <h3 class="box-title">Petugas</h3>
             </div>
             <div class="box-body">
-                    <a class="btn btn-success" href="javascript:void(0)" id="createNewPetugas"> Buat Petugas</a>
-                    <br>
-                    <br>
-                    <table class="table table-bordered data-table">
-                        <thead>
-                            <tr>
-                                <th width="5%">No</th>
-                                <th width="80px">Kode Petugas</th>
-                                <th width="100px">Nama</th>
-                                <th width="50px">Jenis Kelamin</th>
-                                <th width="100px">Jabatan</th>
-                                <th width="100px">Telp</th>
-                                <th>Alamat</th>
-                                <th width="90px">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <a class="btn btn-success" href="javascript:void(0)" id="createNewPetugas"> Buat Petugas</a>
+                <br>
+                <br>
+                <table class="table table-bordered data-table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th width="80px">Kode Petugas</th>
+                            <th width="100px">Nama</th>
+                            <th width="50px">Jenis Kelamin</th>
+                            <th width="100px">Jabatan</th>
+                            <th width="100px">Telp</th>
+                            <th>Alamat</th>
+                            <th width="90px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                        </tbody>
+                    </tbody>
 
-                    </table>
-                <div class="modal" id="ajaxModel" aria-hidden="true">
+                </table>
+                <div class="modal " id="ajaxModel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -104,7 +104,7 @@
                                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                     </button>
 
-                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Batal
                                     </button>
                                 </div>
                             </div>
@@ -151,6 +151,7 @@ $(function () {
     });
 
     $('#createNewPetugas').click(function () {
+        $('#ajaxModel').fadeIn('slow');
         $('#saveBtn').val("create-petugas");
         $('#petugas_id').val('');
         $('#petugasForm').trigger("reset");
@@ -165,6 +166,7 @@ $(function () {
     $('body').on('click', '.editPetugas', function () {
     var petugas_id = $(this).data('id');
     $.get("{{ url('petugas') }}" +'/' + petugas_id +'/edit', function (data) {
+        $('#ajaxModel').fadeIn('slow');
         $('#modelHeading').html("Edit Petugas");
         $('#saveBtn').val("edit-user");
         $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
@@ -251,18 +253,12 @@ $(function () {
         })
     });
 
-    $('#cancelBtn').click(function(e) {
-        e.preventDefault();
-            $('#petugasForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-        $
-    });
-
     $(function() {
         $('input').keypress(function() {
             $('.alert-danger').css('display','none');
         });
     });
+
 });
 </script>
 @endsection

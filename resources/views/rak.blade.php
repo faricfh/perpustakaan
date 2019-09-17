@@ -20,7 +20,7 @@
                 <br>
                 <br/>
 
-                <table class="table table-bordered data-table">
+                <table class="table table-bordered data-table" style="width:100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -74,7 +74,7 @@
                                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                     </button>
 
-                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Batal
                                     </button>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@ $(function () {
     });
 
     $('#createNewRak').click(function () {
-        $('#ajaxModel').modal({backdrop: 'static', keyboard: false})
+        $('#ajaxModel').fadeIn('slow');
         $('#saveBtn').val("create-rak");
         $('#rak_id').val('');
         $('#rakForm').trigger("reset");
@@ -162,6 +162,7 @@ $(function () {
     $('body').on('click', '.editRak', function () {
         var rak_id = $(this).data('id');
         $.get("{{ url('/rak') }}" +'/' + rak_id +'/edit', function (data) {
+            $('#ajaxModel').fadeIn('slow');
             $('#modelHeading').html("Edit Anggota");
             $('#saveBtn').val("edit-user");
             $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
@@ -240,13 +241,6 @@ $(function () {
             )
         }
         })
-    });
-
-    $('#cancelBtn').click(function(e) {
-        e.preventDefault();
-            $('#rakForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-        $
     });
 
     $(function() {

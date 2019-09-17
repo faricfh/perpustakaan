@@ -17,7 +17,7 @@
                 <a class="btn btn-success" href="javascript:void(0)" id="createNewBuku">Buat Buku</a>
                 <br>
                 <br/>
-                <table class="table table-bordered data-table">
+                <table class="table table-bordered data-table" style="width:100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -94,7 +94,7 @@
                                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                     </button>
 
-                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Batal
                                     </button>
                                 </div>
                             </div>
@@ -132,6 +132,7 @@ $(function () {
     });
 
     $('#createNewBuku').click(function () {
+        $('#ajaxModel').fadeIn('slow');
         $('#saveBtn').val("create-buku");
         $('#buku_id').val('');
         $('#bukuForm').trigger("reset");
@@ -145,6 +146,7 @@ $(function () {
     $('body').on('click', '.editBuku', function () {
     var buku_id = $(this).data('id');
         $.get("{{ url('buku') }}" +'/' + buku_id +'/edit', function (data) {
+            $('#ajaxModel').fadeIn('slow');
             $('#modelHeading').html("Edit Buku");
             $('#saveBtn').val("edit-user");
             $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
@@ -228,13 +230,6 @@ $(function () {
         }
         })
     });
-
-    $('#cancelBtn').click(function(e) {
-        e.preventDefault();
-            $('#bukuForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-        $
-    })
 
     $(function() {
         $('input').keypress(function() {

@@ -18,7 +18,7 @@
                 <br>
                 <br/>
 
-                <table class="table table-bordered data-table">
+                <table class="table table-bordered data-table" style="width:100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -99,7 +99,7 @@
                                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                     </button>
 
-                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Batal
                                     </button>
                                 </div>
                             </div>
@@ -138,6 +138,7 @@ $(function () {
     });
 
     $('#createNewAnggota').click(function () {
+        $('#ajaxModel').fadeIn('slow');
         $('#saveBtn').val("create-anggota");
         $('#anggota_id').val('');
         $('#anggotaForm').trigger("reset");
@@ -151,6 +152,7 @@ $(function () {
     $('body').on('click', '.editAnggota', function () {
     var anggota_id = $(this).data('id');
     $.get("{{ url('anggota') }}" +'/' + anggota_id +'/edit', function (data) {
+        $('#ajaxModel').fadeIn('slow');
         $('#modelHeading').html("Edit Anggota");
         $('#saveBtn').val("edit-user");
         $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
@@ -235,13 +237,6 @@ $(function () {
             )
         }
         })
-    });
-
-    $('#cancelBtn').click(function(e) {
-        e.preventDefault();
-            $('#anggotaForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-        $
     });
 
     $(function() {

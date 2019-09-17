@@ -18,7 +18,7 @@
                 <br>
                 <br/>
 
-                <table class="table table-bordered data-table">
+                <table class="table table-bordered data-table" style="width:100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -105,7 +105,7 @@
                                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan
                                     </button>
 
-                                    <button type="submit" class="btn btn-danger" id="cancelBtn" value="cancel">Batal
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Batal
                                     </button>
                                 </div>
                             </div>
@@ -145,6 +145,7 @@ $(function () {
     });
 
     $('#createNewPeminjaman').click(function () {
+        $('#ajaxModel').fadeIn('slow');
         $('#saveBtn').val("create-peminjaman");
         $('#peminjaman_id').val('');
         $('#peminjamanForm').trigger("reset");
@@ -208,6 +209,7 @@ $(function () {
         $.get("{{ url('peminjaman') }}" +'/' + peminjaman_id +'/edit', function (data) {
             $.each(data,function(key, value){
                 console.log(value);
+            $('#ajaxModel').fadeIn('slow');
             $('#modelHeading').html("Edit Peminjaman");
             $('#saveBtn').val("edit-user");
             $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
@@ -291,13 +293,6 @@ $(function () {
             )
         }
         })
-    });
-
-    $('#cancelBtn').click(function(e) {
-        e.preventDefault();
-            $('#peminjamanForm').trigger("reset");
-            $('#ajaxModel').modal('hide');
-        $
     });
 
     $(function() {
