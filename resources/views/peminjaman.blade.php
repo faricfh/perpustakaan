@@ -92,9 +92,7 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <label>Buku</label>
-                                            <select name="kode_buku" class="form-control" id="kode_buku">
-                                                <option selected disabled>Pilih Buku</option>
-                                            </select>
+                                            <select name="buku[]" class="buku" id="buku" style="width:100%" multiple="multiple"></select>
                                         </div>
                                     </div>
                                 </form>
@@ -119,6 +117,11 @@
 
 @endsection
 @section('js')
+<script>
+    $(document).ready(function() {
+        $("#buku").select2();
+    });
+</script>
 <script type="text/javascript">
 $(function () {
 
@@ -139,7 +142,7 @@ $(function () {
             {data: 'tanggal_kembali', name: 'tanggal_kembali'},
             {data: 'nama_petugas', name: 'kode_petugas'},
             {data: 'nama_anggota', name: 'kode_anggota'},
-            {data: 'judul', name: 'kode_buku'},
+            {data: 'buku', name: 'buku'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -149,6 +152,7 @@ $(function () {
         $('#saveBtn').val("create-peminjaman");
         $('#peminjaman_id').val('');
         $('#peminjamanForm').trigger("reset");
+        $('#buku').val('').trigger('change');
         $('#modelHeading').html("Buat Peminjaman");
         $('#ajaxModel').modal({backdrop: 'static', keyboard: false});
         $('#ajaxModel').modal('show');
@@ -163,13 +167,19 @@ $(function () {
         success: function (berhasil) {
             console.log(berhasil)
             $.each(berhasil.data, function (key, value) {
-                $("#kode_buku").append(
+                $("#buku").append(
                     `
-                        <option value="${value.id}">${value.judul}</option>
+                    <option value="${value.id}">
+                        ${value.judul}
+                    </option>
                     `
                 )
             })
         },
+        // (id_buku[key] == value.id ? 'selected' : '')
+        error: function () {
+            console.log('data tidak ada');
+        }
     });
 
     $.ajax({
@@ -207,8 +217,7 @@ $(function () {
     $('body').on('click', '.editPeminjaman', function () {
         var peminjaman_id = $(this).data('id');
         $.get("{{ url('peminjaman') }}" +'/' + peminjaman_id +'/edit', function (data) {
-            $.each(data,function(key, value){
-                console.log(value);
+            $.each(data.peminjaman,function(key, value){
             $('#ajaxModel').fadeIn('slow');
             $('#modelHeading').html("Edit Peminjaman");
             $('#saveBtn').val("edit-user");
@@ -222,7 +231,8 @@ $(function () {
             $('#tanggal_kembali').val(value.tanggal_kembali);
             $('#kode_petugas').val(value.id_petugas);
             $('#kode_anggota').val(value.id_anggota);
-            $('#kode_buku').val(value.id_buku);
+            $('#buku').html('');
+            $('#buku').html(data.buku);
             $('.alert-danger').html('');
             $('.alert-danger').css('display','none');
             });

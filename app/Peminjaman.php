@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Peminjaman extends Model
 {
     protected $fillable = [
-        'kode_pinjam', 'tanggal_pinjam', 'tanggal_kembali', 'kode_petugas', 'kode_anggota', 'kode_buku'
+        'kode_pinjam', 'tanggal_pinjam', 'tanggal_kembali', 'kode_petugas', 'kode_anggota'
     ];
 
     public function petugas()
@@ -22,7 +22,7 @@ class Peminjaman extends Model
 
     public function buku()
     {
-        return $this->belongsTo('App\Buku', 'kode_buku');
+        return $this->belongsToMany('App\Buku', 'peminjaman_buku', 'id_peminjaman', 'id_buku');
     }
 
     public function pengembalian()

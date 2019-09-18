@@ -17,13 +17,12 @@ class PengembalianController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = \DB::select('SELECT p.id,p.kode_kembali, DATE_FORMAT(p.tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,
+            $data = \DB::select('SELECT p.id,p.kode_kembali, DATE_FORMAT(p.tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,p.kode_pinjam as id_kode_pinjam,
                                 DATE_FORMAT(p.jatuh_tempo,"%d-%m-%Y") AS jatuh_tempo,pet.nama AS nama_petugas,
-                                ang.nama AS nama_anggota,buk.judul,pen.kode_pinjam,p.jumlah_hari,p.total_denda
+                                ang.nama AS nama_anggota,pen.kode_pinjam,p.jumlah_hari,p.total_denda
                                 FROM pengembalians AS p
                                 LEFT JOIN petugas AS pet ON pet.id = p.kode_petugas
                                 LEFT JOIN anggotas AS ang ON ang.id = p.kode_anggota
-                                LEFT JOIN bukus AS buk ON buk.id = p.kode_buku
                                 LEFT JOIN peminjamen AS pen ON pen.id = p.kode_pinjam
                                 ');
             return Datatables::of($data)
@@ -33,7 +32,19 @@ class PengembalianController extends Controller
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deletePengembalian">Hapus</a>';
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('buku', function ($row) {
+                    $buku = \DB::select('SELECT pb.id ,b.judul,p.kode_pinjam
+                                        FROM peminjaman_buku AS pb
+                                        LEFT JOIN bukus AS b ON b.id = pb.id_buku
+                                        LEFT JOIN peminjamen AS p ON p.id = pb.id_peminjaman
+                                        WHERE pb.id_peminjaman =' . $row->id_kode_pinjam . '');
+                    $databuku = '';
+                    foreach ($buku as $value) {
+                        $databuku .=  '<li>' . $value->judul . '</li>';
+                    }
+                    return $databuku;
+                })
+                ->rawColumns(['action', 'buku'])
                 ->make(true);
         }
         return view('pengembalian');
@@ -82,7 +93,7 @@ class PengembalianController extends Controller
             $total_denda = $jumlah_hari * 2000;
         }
 
-        Pengembalian::updateOrCreate(
+        $ok = Pengembalian::updateOrCreate(
             ['id' => $request->pengembalian_id],
             [
                 'kode_kembali' => $request->kode_kembali,
@@ -94,7 +105,6 @@ class PengembalianController extends Controller
                 'total_denda' => $total_denda,
                 'kode_petugas' => $request->kode_petugas,
                 'kode_anggota' => $request->kode_anggota,
-                'kode_buku' => $request->kode_buku,
             ]
         );
         return response()->json(['success' => 'Pengembalian saved successfully.']);
@@ -121,17 +131,29 @@ class PengembalianController extends Controller
     {
         $pengembalian = Pengembalian::find($id);
 
-        $edit = \DB::select('SELECT pg.id, a.nama AS nama_anggota, p.nama AS nama_petugas, bk.judul, pm.kode_pinjam,p.id AS id_petugas,a.id AS id_anggota,bk.id AS id_buku,
+        $edit = \DB::select('SELECT pg.id, a.nama AS nama_anggota, p.nama AS nama_petugas, pm.kode_pinjam,p.id AS id_petugas,a.id AS id_anggota,
                                 DATE_FORMAT(pg.tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,
                                 DATE_FORMAT(pm.tanggal_kembali,"%d-%m-%Y") AS jatuh_tempo
                                 FROM pengembalians AS pg
                                 LEFT JOIN petugas AS p ON p.id = pg.kode_petugas
                                 LEFT JOIN anggotas AS a ON a.id = pg.kode_anggota
-                                LEFT JOIN bukus AS bk ON bk.id = pg.kode_buku
                                 LEFT JOIN peminjamen AS pm ON pm.id = pg.kode_pinjam
                                 WHERE pg.id = ' . $id . '');
 
-        $data = ['kem' => $pengembalian, 'dit' => $edit];
+        $buku = \DB::select('SELECT b.id,b.judul,rb.id_peminjaman
+                            FROM bukus AS b
+                            left JOIN peminjaman_buku AS rb ON rb.id_buku = b.id
+                            AND rb.id_peminjaman =' . $pengembalian->kode_pinjam . '
+                            ');
+
+        $databuku = '';
+        foreach ($buku as $value) {
+            if ($value->id_peminjaman == $pengembalian->kode_pinjam) {
+                $databuku .= $value->judul . ' ';
+            }
+        }
+
+        $data = ['kem' => $pengembalian, 'dit' => $edit, 'databuku' => $databuku];
 
         return response()->json($data);
     }
@@ -162,13 +184,22 @@ class PengembalianController extends Controller
 
     public function db($id)
     {
-        $pengembalian = \DB::select('SELECT a.id,DATE_FORMAT(a.tanggal_kembali,"%d-%m-%Y") AS jatuh_tempo,b.nama AS nama_anggota,c.nama AS nama_petugas, d.judul,b.id AS id_anggota,c.id AS id_petugas,d.id AS id_judul
+        $pengembalian = \DB::select('SELECT a.id,DATE_FORMAT(a.tanggal_kembali,"%d-%m-%Y") AS jatuh_tempo,b.nama AS nama_anggota,c.nama AS nama_petugas,b.id AS id_anggota,c.id AS id_petugas
                                     FROM peminjamen AS a
                                     LEFT JOIN anggotas AS b ON b.id = a.kode_anggota
                                     LEFT JOIN petugas AS c ON c.id = a.kode_petugas
-                                    LEFT JOIN bukus AS d ON d.id = a.kode_buku
                                     WHERE a.id = ' . $id . '');
-        // dd($pengembalian);
-        return response()->json($pengembalian);
+
+        $buku = \DB::select('SELECT pb.id ,b.judul,p.kode_pinjam
+                                        FROM peminjaman_buku AS pb
+                                        LEFT JOIN bukus AS b ON b.id = pb.id_buku
+                                        LEFT JOIN peminjamen AS p ON p.id = pb.id_peminjaman
+                                        WHERE pb.id_peminjaman =' . $id . '');
+        $databuku = '';
+        foreach ($buku as $value) {
+            $databuku .=  $value->judul . ' ';
+        }
+
+        return response()->json(['buku' => $databuku, 'pengembalian' => $pengembalian]);
     }
 }

@@ -100,7 +100,6 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <label>Buku</label>
-                                            <input type="hidden" name="kode_buku" class="kode_buku" value="">
                                             <input type="text" class="form-control" id="kode_buku" placeholder="Nama Buku" value="" disabled>
                                         </div>
                                     </div>
@@ -154,7 +153,7 @@ $(function () {
             {data: 'total_denda', name: 'total_denda'},
             {data: 'nama_petugas', name: 'kode_petugas'},
             {data: 'nama_anggota', name: 'kode_anggota'},
-            {data: 'judul', name: 'kode_buku'},
+            {data: 'buku', name: 'buku'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -254,11 +253,11 @@ $(function () {
                 $('#jatuh_tempo').val(value.jatuh_tempo);
                 $('#kode_anggota').val(value.nama_anggota);
                 $('#kode_petugas').val(value.nama_petugas);
-                $('#kode_buku').val(value.judul);
                 $('.kode_anggota').val(value.id_anggota);
                 $('.kode_petugas').val(value.id_petugas);
-                $('.kode_buku').val(value.id_buku);
             });
+            console.log(data);
+            $('#kode_buku').val(data.databuku);
             $('.alert-danger').html('');
             $('.alert-danger').css('display','none');
         });
@@ -343,17 +342,16 @@ $(function () {
             method : 'get',
             dataType : 'json',
             success : function (berhasil) {
-                $.each(berhasil, function(key, value){
+                $.each(berhasil.pengembalian, function(key, value){
                     console.log(value);
                     $('#kode_anggota').val(value.nama_anggota);
                     $('#kode_petugas').val(value.nama_petugas);
-                    $('#kode_buku').val(value.judul);
                     $('#jatuh_tempo').val(value.jatuh_tempo);
                     $('.jatuh_tempo').val(value.jatuh_tempo);
-                    $('.kode_buku').val(value.id_judul);
                     $('.kode_anggota').val(value.id_anggota);
                     $('.kode_petugas').val(value.id_petugas);
                 });
+                $('#kode_buku').val(berhasil.buku);
             },
         });
     });

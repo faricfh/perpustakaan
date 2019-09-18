@@ -16,12 +16,12 @@ class PeminjamanController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // $data = Peminjaman::with('buku', 'anggota', 'petugas')->get();
-            $data = \DB::select('SELECT peminjamen.id,kode_pinjam,date_format(tanggal_pinjam,"%d-%m-%Y") AS tanggal_pinjam, date_format(tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,pet.nama AS nama_petugas, ang.nama AS nama_anggota,buk.judul
+            $data = \DB::select('SELECT peminjamen.id,kode_pinjam,date_format(tanggal_pinjam,"%d-%m-%Y") AS tanggal_pinjam,
+                                        date_format(tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,pet.nama AS nama_petugas,
+                                        ang.nama AS nama_anggota
                                 FROM peminjamen
                                 LEFT JOIN petugas AS pet ON pet.id = peminjamen.kode_petugas
-                                LEFT JOIN anggotas AS ang ON ang.id = peminjamen.kode_anggota
-                                LEFT JOIN bukus AS buk ON buk.id = peminjamen.kode_buku');
+                                LEFT JOIN anggotas AS ang ON ang.id = peminjamen.kode_anggota');
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -35,7 +35,19 @@ class PeminjamanController extends Controller
                         return $btn;
                     }
                 })
-                ->rawColumns(['action'])
+                ->addColumn('buku', function ($row) {
+                    $buku = \DB::select('SELECT pb.id ,b.judul,p.kode_pinjam
+                                        FROM peminjaman_buku AS pb
+                                        LEFT JOIN bukus AS b ON b.id = pb.id_buku
+                                        LEFT JOIN peminjamen AS p ON p.id = pb.id_peminjaman
+                                        WHERE pb.id_peminjaman =' . $row->id . '');
+                    $databuku = '';
+                    foreach ($buku as $value) {
+                        $databuku .= '<li>' . $value->judul . '</li>';
+                    }
+                    return $databuku;
+                })
+                ->rawColumns(['action', 'buku'])
                 ->make(true);
         }
         return view('peminjaman');
@@ -65,7 +77,6 @@ class PeminjamanController extends Controller
             'tanggal_kembali' => 'required',
             'kode_petugas' => 'required',
             'kode_anggota' => 'required',
-            'kode_buku' => 'required'
         ], [
             'kode_pinjam.required' => 'Kode Pinjam Harus di Isi',
             'kode_pinjam.unique' => 'Kode Pinjam Sudah Ada',
@@ -75,12 +86,11 @@ class PeminjamanController extends Controller
             'tanggal_kembali.required' => 'Tanggal Kembali Harus di Isi',
             'kode_petugas.required' => 'Kode Petugas Harus di Pilih',
             'kode_anggota.required' => 'Kode Anggota Harus di Pilih',
-            'kode_buku.required' => 'Kode Buku Harus di Pilih'
         ]);
 
         $pinjam = \Carbon\Carbon::parse($request->tanggal_pinjam)->format("Y-m-d");
         $kembali = \Carbon\Carbon::parse($request->tanggal_kembali)->format("Y-m-d");
-        Peminjaman::updateOrCreate(
+        $pinjam = Peminjaman::updateOrCreate(
             ['id' => $request->peminjaman_id],
             [
                 'kode_pinjam' => $request->kode_pinjam,
@@ -88,9 +98,9 @@ class PeminjamanController extends Controller
                 'tanggal_kembali' => $kembali,
                 'kode_petugas' => $request->kode_petugas,
                 'kode_anggota' => $request->kode_anggota,
-                'kode_buku' => $request->kode_buku
             ]
         );
+        $pinjam->buku()->sync($request->buku);
         return response()->json(['success' => 'Peminsjaman saved successfully.']);
     }
 
@@ -113,13 +123,33 @@ class PeminjamanController extends Controller
      */
     public function edit($id)
     {
-        $peminjaman = \DB::select('SELECT peminjamen.id,kode_pinjam,date_format(tanggal_pinjam,"%d-%m-%Y") AS tanggal_pinjam, date_format(tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,pet.id AS id_petugas, ang.id AS id_anggota,buk.id AS id_buku
+        $peminjaman = \DB::select('SELECT peminjamen.id,kode_pinjam,date_format(tanggal_pinjam,"%d-%m-%Y") AS tanggal_pinjam, date_format(tanggal_kembali,"%d-%m-%Y") AS tanggal_kembali,pet.id AS id_petugas, ang.id AS id_anggota,pet.nama as nama_petugas, ang.nama as nama_anggota
                                 FROM peminjamen
                                 LEFT JOIN petugas AS pet ON pet.id = peminjamen.kode_petugas
                                 LEFT JOIN anggotas AS ang ON ang.id = peminjamen.kode_anggota
-                                LEFT JOIN bukus AS buk ON buk.id = peminjamen.kode_buku
                                 WHERE peminjamen.id = ' . $id . '');
-        return response()->json($peminjaman);
+
+        $pin = Peminjaman::find($id);
+        $datapeminjaman = [
+            'id' => $pin->id, 'kode_pinjam' => $pin->kode_pinjam, 'tanggal_pinjam' => $pin->tanggal_pinjam,
+            'tanggal_kembali' => $pin->tanggal_kembali, 'kode_petugas' => $pin->kode_petugas, 'kode_anggota' => $pin->kode_anggota
+        ];
+
+        $buku = \DB::select('SELECT b.id,b.judul,rb.id_peminjaman
+                            FROM bukus AS b
+                            left JOIN peminjaman_buku AS rb ON rb.id_buku = b.id
+                            AND rb.id_peminjaman=' . $pin->id . '
+                            ');
+
+        foreach ($buku as $value) {
+            $option[] = '<option value="' . $value->id . '" ' . ($value->id_peminjaman == $pin->id ? 'selected' : '') . '>' . $value->judul . '</option>';
+        }
+
+        $test = implode('', $option);
+
+        $data = ['datapeminjaman' => $datapeminjaman, 'buku' => $test, 'peminjaman' => $peminjaman];
+
+        return response()->json($data);
     }
 
     /**
